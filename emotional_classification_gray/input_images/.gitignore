@@ -1,0 +1,4 @@
+input test images
+*
+# Except this file
+!.gitignore

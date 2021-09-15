@@ -24,7 +24,7 @@ img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 face = face_cascade.detectMultiScale(img_gray, 1.3, 5)
 
 
-# 얼굴이 검출되었다면 좌표 정보를 리턴받고, 없다면 오류 표출
+# 얼굴이 검출되었다면 좌표 정보를 리턴받고, 없다면 오류 표출 ## 수정
 for (x, y, w, h) in face:
     cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 2)
     face_boundary = img_gray[y-50:y+h+50, x-50:x+w+50]

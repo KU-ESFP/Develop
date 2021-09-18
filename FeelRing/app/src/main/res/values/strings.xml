@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">graduateProject</string>
+    <string name="network_not_connected">인터넷이 연결되지 않았습니다.</string>
+    <string name="dialog_ok">확인</string>
+    <string name="dialog_cancel">취소</string>
+    <string name="nickname_not_exist">닉네임을 입력해주세요</string>
+</resources>

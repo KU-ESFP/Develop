@@ -7,7 +7,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.graduate.FeelRing.R;
+import com.FeelRing.R;
+import com.FeelRing.utils.ToastUtil;
 
 public class SurveyActivity extends BaseActivity {
     EditText etInputName;
@@ -30,19 +31,19 @@ public class SurveyActivity extends BaseActivity {
         etInputName = (EditText) findViewById(R.id.et_input_name);
         btNext = (Button) findViewById(R.id.bt_next);
 
-        String nickName = String.valueOf(etInputName.getText());
-        setNickName(nickName);
-
         btNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // TODO: 어플 종료하면 닉네임 정보 사라짐 => SQLite에 저장하도록 구현하기
+                String nickName = String.valueOf(etInputName.getText());
+                setNickName(nickName);
+
                 if (!checkNickName()) {
                     showToast(R.string.nickname_not_exist);
                     etInputName.setHintTextColor(getResources().getColor(R.color.red));
                 } else {
                     Intent intent = new Intent(getActivity(), MainActivity.class);
                     startActivity(intent);
-
                 }
             }
         });

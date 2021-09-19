@@ -21,6 +21,8 @@
             android:layout_margin="10dp"
             android:hint="이름 혹은 닉네임을 입력해주세요"
             android:maxLength="10"
+            android:maxLines="1"
+            android:inputType="text"
             />
 
         <Button

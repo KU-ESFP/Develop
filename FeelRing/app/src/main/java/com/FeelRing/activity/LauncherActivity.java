@@ -1,10 +1,16 @@
 package com.FeelRing.activity;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
 import android.widget.TextView;
+
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import com.FeelRing.R;
 import com.FeelRing.utils.BFunction;
 import com.FeelRing.utils.Const.CHECK_STATUS;
@@ -14,7 +20,6 @@ public class LauncherActivity extends BaseActivity {
 
     TextView tvVersion;
     CHECK_STATUS STATUS = CHECK_STATUS.STATUS_NETWORK;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +43,7 @@ public class LauncherActivity extends BaseActivity {
     private void initControls() {
         tvVersion = (TextView) findViewById(R.id.tv_version);
         tvVersion.setText(getAppVersionName());
+
     }
 
     private void checkEnvironments() {
@@ -58,6 +64,14 @@ public class LauncherActivity extends BaseActivity {
                         }
                     });
                     return;
+                } else {
+                    STATUS = CHECK_STATUS.STATUS_PERMISSION;
+                }
+            }
+
+            case STATUS_PERMISSION: {
+                if (!checkPermissions()) {
+                    ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
                 } else {
                     STATUS = CHECK_STATUS.STATUS_NICKNAME;
                 }
@@ -86,7 +100,17 @@ public class LauncherActivity extends BaseActivity {
         }
     }
 
-    // 2. 닉네임 있는 지 확인
+    // 2. 카메라 권한 받기
+    private boolean checkPermissions() {
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            return false;
+        }
+
+        return true;
+    }
+
+    // 3. 닉네임 있는 지 확인
     private boolean checkNickName() {
         if (getNickName().length() > 0) {
             Log.d("rsj", "Nick name == " + getNickName());
@@ -96,9 +120,6 @@ public class LauncherActivity extends BaseActivity {
             return false;
         }
     }
-
-
-    // 2. 카메라 권한 받기
 
 
 

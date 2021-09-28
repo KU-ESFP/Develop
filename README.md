@@ -16,5 +16,5 @@
 - **network**
 
 ## About
-- android stuido 4.1.1
-- okhttp3 3.4.1
+- android stuido v4.1.1
+- okhttp3 v3.4.1

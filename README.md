@@ -16,5 +16,7 @@
 - **network**
 
 ## About
-- android stuido -- version 4.1.1
-- okhttp3 -- vesion 3.4.1
+- android stuido 4.1.1
+- dependency
+  - OkHttp3 4.9.0
+  - glide 4.12.0

@@ -14,7 +14,8 @@
   - PopupUtil
   - ToastUtil
 - **network**
-  - networkManager
+  - NetworkManager
+  - ResEmotion
 
 ## About
 - android stuido 4.1.1

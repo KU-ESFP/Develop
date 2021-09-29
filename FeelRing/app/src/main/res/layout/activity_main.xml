@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="8dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/iv_photo"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:layout_margin="20dp"
+                    android:src="@android:drawable/ic_menu_camera" />
+
+                <Button
+                    android:id="@+id/bt_camera"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="촬영하기" />
+
+                <Button
+                    android:id="@+id/bt_gallery"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="가져오기" />
+
+                <Button
+                    android:id="@+id/bt_ok"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="분석하기"
+                    android:enabled="false"/>
+
+            </LinearLayout>
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/fl_progress"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#55000000" />
+
+            <ProgressBar
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_gravity="center" />
+
+        </FrameLayout>
+
+    </FrameLayout>
+
+</LinearLayout>

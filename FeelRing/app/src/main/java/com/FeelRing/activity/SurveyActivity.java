@@ -8,7 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.FeelRing.R;
-import com.FeelRing.utils.ToastUtil;
+import com.FeelRing.utils.Const;
 
 public class SurveyActivity extends BaseActivity {
     EditText etInputName;
@@ -53,10 +53,10 @@ public class SurveyActivity extends BaseActivity {
 
     private boolean checkNickName() {
         if (getNickName().length() > 0) {
-            Log.d("rsj", "Nick name == " + getNickName());
+            Log.d(Const.TAG, "Nick name == " + getNickName());
             return true;
         } else {
-            Log.d("rsj", "Nick name is not exist");
+            Log.d(Const.TAG, "Nick name is not exist");
             return false;
         }
     }

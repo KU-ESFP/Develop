@@ -1,12 +1,13 @@
 package com.FeelRing.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.pm.PackageManager;
 import android.util.Log;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.FeelRing.R;
 import com.FeelRing.utils.BFunction;
+import com.FeelRing.utils.Const;
 import com.FeelRing.utils.PopupUtil;
 import com.FeelRing.utils.ToastUtil;
 
@@ -79,14 +80,14 @@ public class BaseActivity extends AppCompatActivity {
         if (System.currentTimeMillis() > backKeyPressedTime + 2500) {
             backKeyPressedTime = System.currentTimeMillis();
             showToast(R.string.touch_one_backpress);
-            Log.d("rsj", "back press time == " + backKeyPressedTime);
-            Log.d("rsj", "system time" + System.currentTimeMillis());
+            Log.d(Const.TAG, "back press time == " + backKeyPressedTime);
+            Log.d(Const.TAG, "system time" + System.currentTimeMillis());
             return;
         }
         // 마지막으로 뒤로 가기 버튼을 눌렀던 시간에 2.5초를 더해 현재 시간과 비교 후
         // 마지막으로 뒤로 가기 버튼을 눌렀던 시간이 2.5초가 지나지 않았으면 종료
         if (System.currentTimeMillis() <= backKeyPressedTime + 2500) {
-            Log.d("rsj", "finish!!");
+            Log.d(Const.TAG, "finish!!");
 
             // TODO: 로그 찍히는거로 봐서 조건문은 들어오는데 finish()가 제대로 되지 않음..해결하기
             finish();

@@ -8,11 +8,11 @@ import android.provider.Settings;
 import android.util.Log;
 import android.widget.TextView;
 
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.FeelRing.R;
 import com.FeelRing.utils.BFunction;
+import com.FeelRing.utils.Const;
 import com.FeelRing.utils.Const.CHECK_STATUS;
 import com.FeelRing.utils.NetUtil;
 
@@ -47,7 +47,7 @@ public class LauncherActivity extends BaseActivity {
     }
 
     private void checkEnvironments() {
-        Log.d("rsj", "check network == ");
+        Log.d(Const.TAG, "check network == ");
 
         switch (STATUS) {
             case STATUS_NETWORK: {
@@ -65,17 +65,17 @@ public class LauncherActivity extends BaseActivity {
                     });
                     return;
                 } else {
-                    STATUS = CHECK_STATUS.STATUS_PERMISSION;
-                }
-            }
-
-            case STATUS_PERMISSION: {
-                if (!checkPermissions()) {
-                    ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-                } else {
                     STATUS = CHECK_STATUS.STATUS_NICKNAME;
                 }
             }
+
+//            case STATUS_PERMISSION: {
+//                if (!checkPermissions()) {
+//                    //ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+//                } else {
+//                    STATUS = CHECK_STATUS.STATUS_NICKNAME;
+//                }
+//            }
 
             case STATUS_NICKNAME: {
                 if (!checkNickName()) {
@@ -92,18 +92,19 @@ public class LauncherActivity extends BaseActivity {
     // 1. 인터넷 연결 확인
     private boolean checkNetwork() {
         if (NetUtil.isConnected(this)) {
-            Log.d("rsj", "Network Connected");
+            Log.d(Const.TAG, "Network Connected");
             return true;
         } else {
-            Log.d("rsj","Network Unconnected");
+            Log.d(Const.TAG,"Network Unconnected");
             return false;
         }
     }
 
-    // 2. 카메라 권한 받기
+    // 2. 권한 확인
     private boolean checkPermissions() {
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
-                || ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                || ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             return false;
         }
 
@@ -113,10 +114,10 @@ public class LauncherActivity extends BaseActivity {
     // 3. 닉네임 있는 지 확인
     private boolean checkNickName() {
         if (getNickName().length() > 0) {
-            Log.d("rsj", "Nick name == " + getNickName());
+            Log.d(Const.TAG, "Nick name == " + getNickName());
             return true;
         } else {
-            Log.d("rsj", "Nick name is not exist");
+            Log.d(Const.TAG, "Nick name is not exist");
             return false;
         }
     }

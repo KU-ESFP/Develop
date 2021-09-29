@@ -9,7 +9,6 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -17,6 +16,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FeelRing">
+        <activity android:name=".activity.MainActivity"></activity>
         <activity android:name=".activity.SurveyActivity" />
         <activity android:name=".activity.BaseActivity" />
         <activity android:name=".activity.LauncherActivity">
@@ -26,20 +26,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.MainActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.FeelRing.provider"
+            android:authorities="com.FeelRing.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
-
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/filepaths" />
-
         </provider>
-
     </application>
 
 </manifest>

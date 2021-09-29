@@ -1,5 +1,15 @@
 <resources>
     <string name="app_name">FeelRing</string>
+
+<!-- url  -->
+    <string name="server_ip">203.252.166.75</string>
+    <string name="pl_happy_url">203.252.166.75</string>
+    <string name="pl_sad_url">203.252.166.75</string>
+    <string name="pl_surprise_url">203.252.166.75</string>
+    <string name="pl_angry_url">203.252.166.75</string>
+    <string name="pl_neutral_url">203.252.166.75</string>
+
+<!--    -->
     <string name="network_not_connected">인터넷이 연결되지 않았습니다.</string>
     <string name="dialog_ok">확인</string>
     <string name="dialog_cancel">취소</string>

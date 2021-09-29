@@ -14,9 +14,12 @@
   - PopupUtil
   - ToastUtil
 - **network**
+  - networkManager
 
 ## About
 - android stuido 4.1.1
 - dependency
-  - OkHttp3 4.9.0
   - glide 4.12.0
+  - OkHttp3 4.9.0
+  - Retrofit2 2.3.0
+  - gson 2.8.0

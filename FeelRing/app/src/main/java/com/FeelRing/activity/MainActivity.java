@@ -21,9 +21,10 @@ import androidx.core.content.FileProvider;
 
 import com.FeelRing.R;
 import com.FeelRing.network.NetworkManager;
-import com.FeelRing.network.ResEmotion;
 import com.FeelRing.utils.Const;
 import com.bumptech.glide.Glide;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -31,6 +32,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 public class MainActivity extends BaseActivity {
     Button bt_camera;
@@ -92,9 +97,35 @@ public class MainActivity extends BaseActivity {
         bt_ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ResEmotion resEmotion = new ResEmotion();
-                NetworkManager.post(String.valueOf(R.string.server_ip), photoFile, resEmotion);
-                Log.d(Const.TAG, "button click :: check emotion == " + resEmotion.getEmotion());
+
+                NetworkManager.requestTest("http://203.252.166.75:8080/api/test", new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Log.d(Const.TAG, "call fail");
+                    }
+
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        if (response.isSuccessful()) {
+//                            ResponseBody body = response.body();
+//                            if (body != null) Log.d(Const.TAG, "response == " + body.string());
+                            String res = response.body().string();
+                            Log.d(Const.TAG, "res == " + res);
+
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+
+                                }
+                            });
+
+
+                        } else {
+                            Log.d(Const.TAG, "response error");
+                        }
+                    }
+                });
+
             }
         });
 

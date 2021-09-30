@@ -18,8 +18,34 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 public class NetworkManager {
+    public static void requestTest(String url, Callback cb) {
+        OkHttpClient client = new OkHttpClient();
+
+        Request.Builder builder = new Request.Builder().url(url).get();
+        Request request = builder.build();
+
+        client.newCall(request).enqueue(new Callback() {
+            //Handler mainHandler = new Handler();
+
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Log.d(Const.TAG, "call fail");
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    ResponseBody body = response.body();
+                    if (body != null) Log.d(Const.TAG, "response == " + body.string());
+                } else {
+                    Log.d(Const.TAG, "response error");
+                }
+            }
+        });
+    }
 
     public static void post(String requestURL, File image, ResEmotion resEmotion) {
         // 1. create request body

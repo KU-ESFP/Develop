@@ -42,11 +42,8 @@
                     android:id="@+id/bt_ok"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="분석하기"/>
-<!--                    android:enabled="false"/>-->
-
-
-
+                    android:text="분석하기"
+                    android:enabled="false"/>
             </LinearLayout>
         </FrameLayout>
 

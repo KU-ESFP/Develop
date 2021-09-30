@@ -91,40 +91,64 @@ public class MainActivity extends BaseActivity {
             }
         });
 
-        if (is_exist = true) bt_ok.setActivated(true);
-        else bt_ok.setActivated(false);
-
         bt_ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (photoFile == null) {
+                    Log.d(Const.TAG, "bt :: photo file is null");
+                    return;
+                }
 
-                NetworkManager.requestTest("http://203.252.166.75:8080/api/test", new Callback() {
+                NetworkManager.requestEmotion("http://203.252.166.75:8080/api/test", photoFile, new Callback() {
                     @Override
                     public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                        Log.d(Const.TAG, "call fail");
+                        Log.d(Const.TAG, "call fail(1)");
                     }
 
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                        if (response.isSuccessful()) {
-//                            ResponseBody body = response.body();
-//                            if (body != null) Log.d(Const.TAG, "response == " + body.string());
-                            String res = response.body().string();
-                            Log.d(Const.TAG, "res == " + res);
-
+                        if (response.isSuccessful())  {
+                            Log.d(Const.TAG, "call success");
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
 
                                 }
                             });
-
-
-                        } else {
-                            Log.d(Const.TAG, "response error");
                         }
+                        else Log.d(Const.TAG, "call fail(2)");
+
+
                     }
                 });
+
+//                NetworkManager.requestTest("http://203.252.166.75:8080/api/test", new Callback() {
+//                    @Override
+//                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+//                        Log.d(Const.TAG, "call fail");
+//                    }
+//
+//                    @Override
+//                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+//                        if (response.isSuccessful()) {
+////                            ResponseBody body = response.body();
+////                            if (body != null) Log.d(Const.TAG, "response == " + body.string());
+//                            String res = response.body().string();
+//                            Log.d(Const.TAG, "res == " + res);
+//
+//                            runOnUiThread(new Runnable() {
+//                                @Override
+//                                public void run() {
+//
+//                                }
+//                            });
+//
+//
+//                        } else {
+//                            Log.d(Const.TAG, "response error");
+//                        }
+//                    }
+//                });
 
             }
         });
@@ -228,6 +252,13 @@ public class MainActivity extends BaseActivity {
             switch (requestCode) {
                 case REQUEST_TAKE_PHOTO: {
                     showImageView();
+                    if (photoFile != null) {
+                        Log.d(Const.TAG, "(1) take pic :: photo file is not null!!");
+                        bt_ok.setEnabled(true);
+                    } else {
+                        Log.d(Const.TAG, "(1) take pic :: photo file is null!!");
+                        bt_ok.setEnabled(false);
+                    }
                     is_exist = true;
                     break;
                 }
@@ -240,6 +271,14 @@ public class MainActivity extends BaseActivity {
 
                     photoFile = createImageFile();
                     OutputStream out = new FileOutputStream(photoFile);
+
+                    if (photoFile != null) {
+                        Log.d(Const.TAG, "(2) add pic :: photo file is not null!!");
+                        bt_ok.setEnabled(true);
+                    } else {
+                        Log.d(Const.TAG, "(2) add pic :: photo file is null!!");
+                        bt_ok.setEnabled(false);
+                    }
 
                     break;
                 }

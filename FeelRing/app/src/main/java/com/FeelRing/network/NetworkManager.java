@@ -1,6 +1,7 @@
 package com.FeelRing.network;
 
 import java.io.File;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Callback;
 import okhttp3.MultipartBody;
@@ -32,7 +33,11 @@ public class NetworkManager {
                 .build();
 
         // 3. send request
-        OkHttpClient client = new OkHttpClient();
+        OkHttpClient client = new OkHttpClient.Builder()
+                .connectTimeout(1000, TimeUnit.SECONDS)
+                .readTimeout(1000, TimeUnit.SECONDS)
+                .writeTimeout(1000, TimeUnit.SECONDS)
+                .build();
         client.newCall(request).enqueue(cb);
     }
 

@@ -110,6 +110,7 @@ public class MainActivity extends BaseActivity {
                     @Override
                     public void onFailure(@NotNull Call call, @NotNull IOException e) {
                         Log.d(Const.TAG, "call fail(1)");
+                        e.printStackTrace();
                     }
 
                     @Override
@@ -272,7 +273,8 @@ public class MainActivity extends BaseActivity {
 //            }
 //        }
 //    }
-
+    
+    // uri로부터 파일 절대경로 알아오는 메서드
     private String getRealPathFromURI(Uri contentUri) {
         String[] proj = { MediaStore.Images.Media.DATA };
         Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
@@ -280,7 +282,8 @@ public class MainActivity extends BaseActivity {
         cursor.moveToFirst();
         return cursor.getString(column_index);
     }
-
+    
+    // 절대경로 설정해서 포토파일에 덮어씌우는 메서드
     private void setPhotoPath(Uri photoUri) {
         mCurrentPhotoPath = getRealPathFromURI(photoURI);
         photoFile = new File(mCurrentPhotoPath);

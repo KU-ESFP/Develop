@@ -3,8 +3,7 @@ package com.FeelRing.activity;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.ImageDecoder;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -31,11 +30,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 public class MainActivity extends BaseActivity {
     Button bt_camera;
@@ -47,6 +48,8 @@ public class MainActivity extends BaseActivity {
     Uri photoURI;
     Uri albumURI;
     File photoFile;
+
+    ArrayList<String> resFile = new ArrayList<String>();
 
     boolean is_exist = false;
 
@@ -94,12 +97,16 @@ public class MainActivity extends BaseActivity {
         bt_ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(Const.TAG, "ok button click");
+
                 if (photoFile == null) {
                     Log.d(Const.TAG, "bt :: photo file is null");
                     return;
                 }
 
-                NetworkManager.requestEmotion("http://203.252.166.75:8080/api/test", photoFile, new Callback() {
+                Log.d(Const.TAG, "file is not null :: request...");
+
+                NetworkManager.requestEmotion("http://203.252.166.75:8080/uploadFile", photoFile, new Callback() {
                     @Override
                     public void onFailure(@NotNull Call call, @NotNull IOException e) {
                         Log.d(Const.TAG, "call fail(1)");
@@ -109,6 +116,27 @@ public class MainActivity extends BaseActivity {
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                         if (response.isSuccessful())  {
                             Log.d(Const.TAG, "call success");
+                            ResponseBody body = response.body();
+
+                            if (body != null) {
+                                String json = body.string();
+                                Log.d(Const.TAG, "res json :: " + json);
+
+                                // TODO: 갤러리에서 가져오는 사진을 서버로 보내기!
+//                                try {
+//                                    JSONObject jsonObject = new JSONObject(json);
+//                                    String fileName = jsonObject.getString("fileName");
+//                                    String fileDownloadUri = jsonObject.getString("fileDownloadUri");
+//                                    String fileType = jsonObject.getString("fileType");
+//                                    String size = jsonObject.getString("size");
+//
+//                                    Log.d(Const.TAG, "res json parse :: " + fileName + " " + fileDownloadUri + " " + fileType + " " + size);
+//
+//                                } catch (JSONException e) {
+//                                    e.printStackTrace();
+//                                }
+                            }
+
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -192,6 +220,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void captureCamera() {
+        //TODO(1): 다시 찍기 눌렀을 때 오류 해결하기
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if(takePictureIntent.resolveActivity(getPackageManager()) != null) {
             photoFile = null;
@@ -218,30 +247,43 @@ public class MainActivity extends BaseActivity {
         startActivityForResult(intent, REQUEST_READ_PHOTO);
     }
 
-    private void showImageView() {
-        File file = new File(mCurrentPhotoPath);
-        Bitmap bitmap;
+//    private void showImageView() {
+//        File file = new File(mCurrentPhotoPath);
+//        Bitmap bitmap;
+//
+//        if (Build.VERSION.SDK_INT >= 29) {
+//            ImageDecoder.Source source = ImageDecoder.createSource(getContentResolver(), Uri.fromFile(file));
+//            try {
+//                bitmap = ImageDecoder.decodeBitmap(source);
+//                if (bitmap != null) {
+//                    iv_photo.setImageBitmap(bitmap);
+//                }
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        } else {
+//            try {
+//                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), Uri.fromFile(file));
+//                if (bitmap != null) {
+//                    iv_photo.setImageBitmap(bitmap);
+//                }
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
 
-        if (Build.VERSION.SDK_INT >= 29) {
-            ImageDecoder.Source source = ImageDecoder.createSource(getContentResolver(), Uri.fromFile(file));
-            try {
-                bitmap = ImageDecoder.decodeBitmap(source);
-                if (bitmap != null) {
-                    iv_photo.setImageBitmap(bitmap);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), Uri.fromFile(file));
-                if (bitmap != null) {
-                    iv_photo.setImageBitmap(bitmap);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+    private String getRealPathFromURI(Uri contentUri) {
+        String[] proj = { MediaStore.Images.Media.DATA };
+        Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(column_index);
+    }
+
+    private void setPhotoPath(Uri photoUri) {
+        mCurrentPhotoPath = getRealPathFromURI(photoURI);
+        photoFile = new File(mCurrentPhotoPath);
     }
 
     @Override
@@ -251,32 +293,31 @@ public class MainActivity extends BaseActivity {
         try {
             switch (requestCode) {
                 case REQUEST_TAKE_PHOTO: {
-                    showImageView();
+                    Log.d(Const.TAG, "(1) capture photo uri == " + photoURI);
+                    Glide.with(this).load(photoURI).into(iv_photo);
+
                     if (photoFile != null) {
-                        Log.d(Const.TAG, "(1) take pic :: photo file is not null!!");
+                        Log.d(Const.TAG, "(1) take pic :: photo file is NOT null!! :: size = " + photoFile.length() / 1024 + "KB");
                         bt_ok.setEnabled(true);
                     } else {
-                        Log.d(Const.TAG, "(1) take pic :: photo file is null!!");
+                        Log.d(Const.TAG, "(1) take pic :: photo file is null!! :: size = " + photoFile.length() / 1024 + "KB");
                         bt_ok.setEnabled(false);
                     }
-                    is_exist = true;
                     break;
                 }
 
                 case REQUEST_READ_PHOTO: {
-                    //showImageView();
-                    Uri uri = data.getData();
-                    Glide.with(getApplicationContext()).load(uri).into(iv_photo);
-                    is_exist = true;
+                    photoURI = data.getData();
+                    setPhotoPath(photoURI);
 
-                    photoFile = createImageFile();
-                    OutputStream out = new FileOutputStream(photoFile);
+                    Log.d(Const.TAG, "(2) gallery photo uri == " + photoURI);
+                    Glide.with(getApplicationContext()).load(photoURI).into(iv_photo);
 
                     if (photoFile != null) {
-                        Log.d(Const.TAG, "(2) add pic :: photo file is not null!!");
+                        Log.d(Const.TAG, "(2) add pic :: photo file is NOT null!! :: size = " + photoFile.length() / 1024 + "KB");
                         bt_ok.setEnabled(true);
                     } else {
-                        Log.d(Const.TAG, "(2) add pic :: photo file is null!!");
+                        Log.d(Const.TAG, "(2) add pic :: photo file is null!! :: size = " + photoFile.length() / 1024 + "KB");
                         bt_ok.setEnabled(false);
                     }
 

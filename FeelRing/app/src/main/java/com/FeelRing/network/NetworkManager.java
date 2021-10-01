@@ -22,7 +22,7 @@ public class NetworkManager {
         // 1. create request body
         RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
-                .addFormDataPart("image", image.getName(), RequestBody.create(MultipartBody.FORM, image))
+                .addFormDataPart("file", image.getName(), RequestBody.create(MultipartBody.FORM, image))
                 .build();
 
         // 2. create request contained request body

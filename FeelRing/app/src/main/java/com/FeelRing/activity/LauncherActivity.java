@@ -35,11 +35,6 @@ public class LauncherActivity extends BaseActivity {
         checkEnvironments();
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
     private void initControls() {
         tvVersion = (TextView) findViewById(R.id.tv_version);
         tvVersion.setText(getAppVersionName());
@@ -65,25 +60,7 @@ public class LauncherActivity extends BaseActivity {
                     });
                     return;
                 } else {
-                    STATUS = CHECK_STATUS.STATUS_NICKNAME;
-                }
-            }
-
-//            case STATUS_PERMISSION: {
-//                if (!checkPermissions()) {
-//                    //ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-//                } else {
-//                    STATUS = CHECK_STATUS.STATUS_NICKNAME;
-//                }
-//            }
-
-            case STATUS_NICKNAME: {
-                if (!checkNickName()) {
-                    Intent intent = new Intent(getActivity(), SurveyActivity.class);
-                    startActivity(intent);
-                } else {
-                    Intent intent = new Intent(getActivity(), MainActivity.class);
-                    startActivity(intent);
+                    startActivity(new Intent(getActivity(), SurveyActivity.class));
                 }
             }
         }

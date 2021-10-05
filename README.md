@@ -21,6 +21,7 @@
 
 ## About
 - android stuido 4.1.1
+- SQLite
 - dependency
   - glide 4.12.0
   - OkHttp3 4.9.0

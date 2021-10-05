@@ -1,6 +1,7 @@
 package com.FeelRing.activity;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -11,21 +12,26 @@ import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 
 import com.FeelRing.R;
+import com.FeelRing.datebase.DBOpenHelper;
 import com.FeelRing.utils.BFunction;
 import com.FeelRing.utils.Const;
 import com.FeelRing.utils.Const.CHECK_STATUS;
 import com.FeelRing.utils.NetUtil;
 
 public class LauncherActivity extends BaseActivity {
+    final String activityName = "::LauncherActivity";
 
     TextView tvVersion;
     CHECK_STATUS STATUS = CHECK_STATUS.STATUS_NETWORK;
+    Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launcher);
+        context = LauncherActivity.this;
 
+        dbControls();
         initControls();
     }
 
@@ -35,6 +41,12 @@ public class LauncherActivity extends BaseActivity {
         checkEnvironments();
     }
 
+    private void dbControls() {
+        dbHelper = new DBOpenHelper(context);
+        dbHelper.open();
+        dbHelper.create();
+    }
+
     private void initControls() {
         tvVersion = (TextView) findViewById(R.id.tv_version);
         tvVersion.setText(getAppVersionName());
@@ -42,10 +54,9 @@ public class LauncherActivity extends BaseActivity {
     }
 
     private void checkEnvironments() {
-        Log.d(Const.TAG, "check network == ");
-
         switch (STATUS) {
             case STATUS_NETWORK: {
+
                 if (!checkNetwork()) {
                     showPopUp(R.string.network_not_connected, new BFunction() {
                         @Override
@@ -60,6 +71,16 @@ public class LauncherActivity extends BaseActivity {
                     });
                     return;
                 } else {
+                    STATUS = CHECK_STATUS.STATUS_NAME;
+                }
+            }
+            // 이름 이미 저장되어있으면 서베이 액티비티 건너뛰고 바로 메인액티비티로
+            case STATUS_NAME: {
+                if(!emptyDBTable()) {
+                    Log.d(Const.TAG + activityName, "table is not null :: name = " + getNameColumn() + ":: go to main");
+                    startActivity(new Intent(getActivity(), MainActivity.class));
+                } else {
+                    Log.d(Const.TAG + activityName, "table is null :: go to survey");
                     startActivity(new Intent(getActivity(), SurveyActivity.class));
                 }
             }

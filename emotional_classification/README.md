@@ -21,9 +21,9 @@
 
 ## Instructions
 ### 감정 분류를 위한 모델 학습 방법
-Run the train_emotion_classification.py file
+Run the train_emotion_classifier.py file
 ```
-python3 train_emotion_classfication.py
+python3 train_emotion_classifier.py
 ```
 
 ### 학습된 모델 기반(.pth 파일을 사용)으로 이미지의 표정 예측

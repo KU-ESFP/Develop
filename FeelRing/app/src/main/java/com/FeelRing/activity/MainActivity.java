@@ -19,39 +19,29 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 
 import com.FeelRing.R;
-import com.FeelRing.network.NetworkManager;
 import com.FeelRing.utils.Const;
 import com.bumptech.glide.Glide;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
-
 public class MainActivity extends BaseActivity {
+    // 위젯
     Button bt_camera;
     Button bt_gallery;
     Button bt_ok;
     ImageView iv_photo;
 
-    String mCurrentPhotoPath;
-    Uri photoURI;
-    Uri albumURI;
+    // 이미지 파일, 경로, uri
     File photoFile;
+    String photoPath;
+    Uri photoURI;
 
-    ArrayList<String> resFile = new ArrayList<String>();
-
-    boolean is_exist = false;
+    //ArrayList<String> resFile;
 
     final static int REQUEST_TAKE_PHOTO = 1;
     final static int REQUEST_READ_PHOTO = 2;
@@ -83,6 +73,7 @@ public class MainActivity extends BaseActivity {
         bt_camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(Const.TAG, "camera button click");
                 captureCamera();
             }
         });
@@ -90,6 +81,7 @@ public class MainActivity extends BaseActivity {
         bt_gallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(Const.TAG, "gallery button click");
                 readGallery();
             }
         });
@@ -99,90 +91,17 @@ public class MainActivity extends BaseActivity {
             public void onClick(View v) {
                 Log.d(Const.TAG, "ok button click");
 
-                if (photoFile == null) {
-                    Log.d(Const.TAG, "bt :: photo file is null");
-                    return;
+                if (photoFile != null) {
+                    Log.d(Const.TAG, "file is not null :: request...");
+
+                    Intent intent = new Intent(getActivity(), AnalysisActivity.class);
+                    intent.putExtra("photoPath", photoPath);
+                    startActivity(intent);
+
+                    //requestUploadFile(String.valueOf(R.string.upload_file_url));
                 }
-
-                Log.d(Const.TAG, "file is not null :: request...");
-
-                NetworkManager.requestEmotion("http://203.252.166.75:8080/uploadFile", photoFile, new Callback() {
-                    @Override
-                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                        Log.d(Const.TAG, "call fail(1)");
-                        e.printStackTrace();
-                    }
-
-                    @Override
-                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                        if (response.isSuccessful())  {
-                            Log.d(Const.TAG, "call success");
-                            ResponseBody body = response.body();
-
-                            if (body != null) {
-                                String json = body.string();
-                                Log.d(Const.TAG, "res json :: " + json);
-
-                                // TODO: 갤러리에서 가져오는 사진을 서버로 보내기!
-//                                try {
-//                                    JSONObject jsonObject = new JSONObject(json);
-//                                    String fileName = jsonObject.getString("fileName");
-//                                    String fileDownloadUri = jsonObject.getString("fileDownloadUri");
-//                                    String fileType = jsonObject.getString("fileType");
-//                                    String size = jsonObject.getString("size");
-//
-//                                    Log.d(Const.TAG, "res json parse :: " + fileName + " " + fileDownloadUri + " " + fileType + " " + size);
-//
-//                                } catch (JSONException e) {
-//                                    e.printStackTrace();
-//                                }
-                            }
-
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-
-                                }
-                            });
-                        }
-                        else Log.d(Const.TAG, "call fail(2)");
-
-
-                    }
-                });
-
-//                NetworkManager.requestTest("http://203.252.166.75:8080/api/test", new Callback() {
-//                    @Override
-//                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
-//                        Log.d(Const.TAG, "call fail");
-//                    }
-//
-//                    @Override
-//                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-//                        if (response.isSuccessful()) {
-////                            ResponseBody body = response.body();
-////                            if (body != null) Log.d(Const.TAG, "response == " + body.string());
-//                            String res = response.body().string();
-//                            Log.d(Const.TAG, "res == " + res);
-//
-//                            runOnUiThread(new Runnable() {
-//                                @Override
-//                                public void run() {
-//
-//                                }
-//                            });
-//
-//
-//                        } else {
-//                            Log.d(Const.TAG, "response error");
-//                        }
-//                    }
-//                });
-
             }
         });
-
-
     }
 
     // 권한 체크
@@ -210,16 +129,68 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    // 서버 통신 - 파일 업로드 요청
+//    private void requestUploadFile(String url) {
+//        NetworkManager.requestEmotion(url, photoFile, new Callback() {
+//            @Override
+//            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+//                Log.d(Const.TAG, "call fail(1)");
+//                e.printStackTrace();
+//            }
+//
+//            @Override
+//            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+//                if (response.isSuccessful())  {
+//                    Log.d(Const.TAG, "call success");
+//                    ResponseBody body = response.body();
+//
+//                    // TODO(1): 분석하기 누르면 응답 기다리는 동안 프로그레스바 실행 및 화면 못 만지게 멈추기
+//                    // TODO(2): 결과 나오면 감정 다음 액티비티에 넘겨주기
+//                    if (body != null) {
+//                        String json = body.string();
+//                        Log.d(Const.TAG, "res json :: " + json);
+//
+//                        try {
+//                            resFile  = new ArrayList<String>();
+//
+//                            JSONObject jsonObject = new JSONObject(json);
+//                            resFile.add(jsonObject.getString("emotion"));
+//                            resFile.add(jsonObject.getString("fileName"));
+//                            resFile.add(jsonObject.getString("fileDownloadUri"));
+//                            resFile.add(jsonObject.getString("fileType"));
+//                            resFile.add(jsonObject.getString("size"));
+//
+//                            Log.d(Const.TAG, "res json parse :: " + resFile.get(0) + " " + resFile.get(1) + " " + resFile.get(2) + " " + resFile.get(3) + " " + resFile.get(4));
+//
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//
+//                    runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//
+//                        }
+//                    });
+//                }
+//                else Log.d(Const.TAG, "call fail(2)");
+//            }
+//        });
+//    }
+
+    // 카메라로 찍은 사진 저장하기 위한 파일 생성
     private File createImageFile() throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(imageFileName, ".jpg", storageDir);
 
-        mCurrentPhotoPath = image.getAbsolutePath();
+        photoPath = image.getAbsolutePath();
         return image;
     }
 
+    // 카메라 실행 및 사진 저장
     private void captureCamera() {
         //TODO(1): 다시 찍기 눌렀을 때 오류 해결하기
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -230,8 +201,8 @@ public class MainActivity extends BaseActivity {
                 photoFile = createImageFile();
                 OutputStream out = new FileOutputStream(photoFile);
 
-            } catch (IOException ex) {
-
+            } catch (IOException e) {
+                e.printStackTrace();
             }
 
             if(photoFile != null) {
@@ -242,37 +213,12 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    // 갤러리 열고 사진 가져오기
     private void readGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
         startActivityForResult(intent, REQUEST_READ_PHOTO);
     }
-
-//    private void showImageView() {
-//        File file = new File(mCurrentPhotoPath);
-//        Bitmap bitmap;
-//
-//        if (Build.VERSION.SDK_INT >= 29) {
-//            ImageDecoder.Source source = ImageDecoder.createSource(getContentResolver(), Uri.fromFile(file));
-//            try {
-//                bitmap = ImageDecoder.decodeBitmap(source);
-//                if (bitmap != null) {
-//                    iv_photo.setImageBitmap(bitmap);
-//                }
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        } else {
-//            try {
-//                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), Uri.fromFile(file));
-//                if (bitmap != null) {
-//                    iv_photo.setImageBitmap(bitmap);
-//                }
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
     
     // uri로부터 파일 절대경로 알아오는 메서드
     private String getRealPathFromURI(Uri contentUri) {
@@ -284,9 +230,9 @@ public class MainActivity extends BaseActivity {
     }
     
     // 절대경로 설정해서 포토파일에 덮어씌우는 메서드
-    private void setPhotoPath(Uri photoUri) {
-        mCurrentPhotoPath = getRealPathFromURI(photoURI);
-        photoFile = new File(mCurrentPhotoPath);
+    private void setPhotoPath(Uri photoURI) {
+        photoPath = getRealPathFromURI(photoURI);
+        photoFile = new File(photoPath);
     }
 
     @Override
@@ -327,9 +273,8 @@ public class MainActivity extends BaseActivity {
                     break;
                 }
             }
-        } catch (Exception error) {
-            is_exist = false;
-            error.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }

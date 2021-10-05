@@ -20,7 +20,7 @@
   - ResEmotion
 
 ## About
-- android stuido 4.1.1
+- Android Stuido 4.1.1
 - SQLite
 - dependency
   - glide 4.12.0

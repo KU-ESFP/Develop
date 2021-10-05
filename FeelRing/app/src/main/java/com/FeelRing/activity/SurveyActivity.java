@@ -1,6 +1,8 @@
 package com.FeelRing.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.FeelRing.R;
+import com.FeelRing.datebase.DBOpenHelper;
 import com.FeelRing.utils.Const;
 
 public class SurveyActivity extends BaseActivity {
@@ -17,11 +20,16 @@ public class SurveyActivity extends BaseActivity {
 
     private long backKeyPressedTime = 0;
 
+    DBOpenHelper dbHelper;
+    Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_survey);
+        context = SurveyActivity.this;
 
+        dbControls();
         initControls();
     }
 
@@ -30,38 +38,67 @@ public class SurveyActivity extends BaseActivity {
         super.onResume();
     }
 
+    private void dbControls() {
+        dbHelper = new DBOpenHelper(context);
+        dbHelper.open();
+        dbHelper.create();
+    }
+
+    private String getNameColumn() {
+        String name = "";
+        Cursor cr = dbHelper.selectColumns();
+
+        while (cr.moveToNext()) {
+            name = cr.getString(cr.getColumnIndex("name"));
+        }
+
+        return name;
+    }
+
+    private boolean emptyDBTable() {
+        if (dbHelper.getCountRecord() == 0) {
+            Log.d(Const.TAG, "empty");
+            return true;
+        }
+
+        Log.d(Const.TAG, "NOT empty");
+        return false;
+    }
+
     private void initControls() {
         etInputName = (EditText) findViewById(R.id.et_input_name);
         btNext = (Button) findViewById(R.id.bt_next);
 
+        // 데이터 있으면 그 값으로 위젯 세팅
+        if (!emptyDBTable()) {
+            String name = getNameColumn();
+            etInputName.setText(name);
+        }
+
         btNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: 어플 종료하면 닉네임 정보 사라짐 => SQLite에 저장하도록 구현하기
-                String nickName = String.valueOf(etInputName.getText());
-                setNickName(nickName);
+                String name = String.valueOf(etInputName.getText());
+
+                if (!emptyDBTable()) dbHelper.updateColumn(1, name);
+                else dbHelper.insertColumn(name);
+
+                Log.d(Const.TAG, "DB check :: name = " + getNameColumn());
 
                 if (!checkNickName()) {
                     showToast(R.string.nickname_not_exist);
                     etInputName.setHintTextColor(getResources().getColor(R.color.red));
                 } else {
-                    Intent intent = new Intent(getActivity(), MainActivity.class);
-                    startActivity(intent);
+                    startActivity(new Intent(getActivity(), MainActivity.class));
                 }
             }
         });
 
-
     }
 
     private boolean checkNickName() {
-        if (getNickName().length() > 0) {
-            Log.d(Const.TAG, "Nick name == " + getNickName());
-            return true;
-        } else {
-            Log.d(Const.TAG, "Nick name is not exist");
-            return false;
-        }
+        if (etInputName.getText().length() > 0) return true;
+        else return false;
     }
 
     private void exitProgram() {
@@ -93,6 +130,7 @@ public class SurveyActivity extends BaseActivity {
         // 마지막으로 뒤로 가기 버튼을 눌렀던 시간이 2.5초가 지나지 않았으면 종료
         if (System.currentTimeMillis() <= backKeyPressedTime + 2500) {
             Log.d(Const.TAG, "finish!!");
+            dbHelper.close();
 
             exitProgram();
         }

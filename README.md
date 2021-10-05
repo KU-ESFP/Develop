@@ -7,6 +7,8 @@
   - LauncherActivity
   - SurveyActivity
   - MainActivity
+  - AnalaysisActivity
+  - ResultActivity
 - **utils**
   - BFunction
   - Const

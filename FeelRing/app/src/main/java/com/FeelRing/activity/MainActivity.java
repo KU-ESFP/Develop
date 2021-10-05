@@ -1,6 +1,8 @@
 package com.FeelRing.activity;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -30,11 +32,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class MainActivity extends BaseActivity {
+    final String activityName = "::MainActivity";
+
     // 위젯
-    Button bt_camera;
-    Button bt_gallery;
-    Button bt_ok;
-    ImageView iv_photo;
+    Button btPic;
+    Button btOk;
+    Button btEditName;
+    ImageView ivPhoto;
 
     // 이미지 파일, 경로, uri
     File photoFile;
@@ -52,47 +56,51 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        initControls();
+        initFields();
     }
 
     protected void onResume() {
         super.onResume();
 
         checkPermission();
+        initControls();
+    }
+
+    private void initFields() {
+        btPic = (Button) findViewById(R.id.bt_pic);
+        ivPhoto = (ImageView) findViewById(R.id.iv_photo);
+        btEditName = (Button) findViewById(R.id.bt_edit_name);
+        btOk = (Button) findViewById(R.id.bt_ok);
     }
 
     private  void initControls() {
-        bt_camera = (Button) findViewById(R.id.bt_camera);
-        bt_gallery = (Button) findViewById(R.id.bt_gallery);
-        bt_ok = (Button) findViewById(R.id.bt_ok);
 
-        iv_photo = (ImageView) findViewById(R.id.iv_photo);
+//        if (photoFile != null && photoURI != null) {
+//            Log.d(Const.TAG, "photo File and URI is not null :: size =  " + photoFile.length() / 1024 + "kb :: uri = " + photoURI);
+//            Glide.with(getApplicationContext()).load(photoURI).into(iv_photo);
+//        }
 
-        checkPermission();
-
-        bt_camera.setOnClickListener(new View.OnClickListener() {
+        btPic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(Const.TAG, "camera button click");
-                captureCamera();
+                createDialog();
             }
         });
 
-        bt_gallery.setOnClickListener(new View.OnClickListener() {
+        btEditName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(Const.TAG, "gallery button click");
-                readGallery();
+                startActivity(new Intent(getActivity(), SurveyActivity.class));
             }
         });
 
-        bt_ok.setOnClickListener(new View.OnClickListener() {
+        btOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(Const.TAG, "ok button click");
+                Log.d(Const.TAG + activityName, "ok button click");
 
                 if (photoFile != null) {
-                    Log.d(Const.TAG, "file is not null :: request...");
+                    Log.d(Const.TAG + activityName, "file is not null :: request...");
 
                     Intent intent = new Intent(getActivity(), AnalysisActivity.class);
                     intent.putExtra("photoPath", photoPath);
@@ -102,6 +110,45 @@ public class MainActivity extends BaseActivity {
                 }
             }
         });
+
+        //        bt_camera.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Log.d(Const.TAG, "camera button click");
+//                captureCamera();
+//            }
+//        });
+//
+//        bt_gallery.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Log.d(Const.TAG, "gallery button click");
+//                readGallery();
+//            }
+//        });
+    }
+
+    private CharSequence[] imageChooser = {"사진 촬영", "갤러리에서 가져오기"};
+
+    private void createDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle("사진 선택");
+        builder.setItems(imageChooser, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case 0:
+                        captureCamera();
+                        break;
+                    case 1:
+                        readGallery();
+                        break;
+                }
+                dialog.dismiss();
+            }
+        });
+        builder.create();
+        builder.show();
     }
 
     // 권한 체크
@@ -109,9 +156,9 @@ public class MainActivity extends BaseActivity {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if(checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
                     && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                Log.d(Const.TAG, "권한 설정 완료");
+                Log.d(Const.TAG + activityName, "권한 설정 완료");
             } else {
-                Log.d(Const.TAG, "권한 설정 요청");
+                Log.d(Const.TAG + activityName, "권한 설정 요청");
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
             }
         }
@@ -122,10 +169,10 @@ public class MainActivity extends BaseActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        Log.d(Const.TAG, "onRequestPermissionsResult");
+        Log.d(Const.TAG + activityName, "onRequestPermissionsResult");
 
         if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED ) {
-            Log.d(Const.TAG, "Permission: " + permissions[0] + "was " + grantResults[0]);
+            Log.d(Const.TAG + activityName, "Permission: " + permissions[0] + "was " + grantResults[0]);
         }
     }
 
@@ -242,15 +289,15 @@ public class MainActivity extends BaseActivity {
         try {
             switch (requestCode) {
                 case REQUEST_TAKE_PHOTO: {
-                    Log.d(Const.TAG, "(1) capture photo uri == " + photoURI);
-                    Glide.with(this).load(photoURI).into(iv_photo);
+                    Log.d(Const.TAG + activityName, "(1) capture photo uri == " + photoURI);
+                    Glide.with(this).load(photoURI).into(ivPhoto);
 
                     if (photoFile != null) {
-                        Log.d(Const.TAG, "(1) take pic :: photo file is NOT null!! :: size = " + photoFile.length() / 1024 + "KB");
-                        bt_ok.setEnabled(true);
+                        Log.d(Const.TAG + activityName, "(1) take pic :: photo file is NOT null!! :: size = " + photoFile.length() / 1024 + "KB");
+                        btOk.setEnabled(true);
                     } else {
                         Log.d(Const.TAG, "(1) take pic :: photo file is null!! :: size = " + photoFile.length() / 1024 + "KB");
-                        bt_ok.setEnabled(false);
+                        btOk.setEnabled(false);
                     }
                     break;
                 }
@@ -259,15 +306,15 @@ public class MainActivity extends BaseActivity {
                     photoURI = data.getData();
                     setPhotoPath(photoURI);
 
-                    Log.d(Const.TAG, "(2) gallery photo uri == " + photoURI);
-                    Glide.with(getApplicationContext()).load(photoURI).into(iv_photo);
+                    Log.d(Const.TAG + activityName, "(2) gallery photo uri == " + photoURI);
+                    Glide.with(getApplicationContext()).load(photoURI).into(ivPhoto);
 
                     if (photoFile != null) {
-                        Log.d(Const.TAG, "(2) add pic :: photo file is NOT null!! :: size = " + photoFile.length() / 1024 + "KB");
-                        bt_ok.setEnabled(true);
+                        Log.d(Const.TAG + activityName, "(2) add pic :: photo file is NOT null!! :: size = " + photoFile.length() / 1024 + "KB");
+                        btOk.setEnabled(true);
                     } else {
-                        Log.d(Const.TAG, "(2) add pic :: photo file is null!! :: size = " + photoFile.length() / 1024 + "KB");
-                        bt_ok.setEnabled(false);
+                        Log.d(Const.TAG + activityName, "(2) add pic :: photo file is null!! :: size = " + photoFile.length() / 1024 + "KB");
+                        btOk.setEnabled(false);
                     }
 
                     break;
@@ -278,8 +325,4 @@ public class MainActivity extends BaseActivity {
         }
 
     }
-
-
-
-
 }

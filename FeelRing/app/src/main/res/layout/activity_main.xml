@@ -27,42 +27,25 @@
                     android:src="@android:drawable/ic_menu_camera" />
 
                 <Button
-                    android:id="@+id/bt_camera"
+                    android:id="@+id/bt_pic"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="촬영하기" />
+                    android:text="사진 선택" />
 
                 <Button
-                    android:id="@+id/bt_gallery"
+                    android:id="@+id/bt_edit_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="가져오기" />
+                    android:text="이름 수정" />
 
                 <Button
                     android:id="@+id/bt_ok"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="분석하기"
+                    android:text="분석 시작"
                     android:enabled="false"/>
+
             </LinearLayout>
-        </FrameLayout>
-
-        <FrameLayout
-            android:id="@+id/fl_progress"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone">
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#55000000" />
-
-            <ProgressBar
-                android:layout_width="75dp"
-                android:layout_height="75dp"
-                android:layout_gravity="center" />
-
         </FrameLayout>
 
     </FrameLayout>

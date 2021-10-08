@@ -56,17 +56,18 @@ for (x, y, w, h) in face:
     list_face_detected.append(classes[pred])
     cv2.putText(img, classes[pred], (x - 10, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2, cv2.LINE_AA)
 
+# 얼굴 검출에 따른 결과
+if len(list_face_detected) == 1:
+    print('[SUCCESS] ONE FACE DETECTED')
+    print(list_face_detected[0])
+elif len(list_face_detected) == 0:
+    print('[ERROR] FACE IS NOT DETECTED')
+else:
+    print('[ERROR] A LOT OF FACES ARE DETECTED')
+
+
 # 이미지 확인할 때 사용
 cv2.imshow('detect', img)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
-
-# # 얼굴 검출에 따른 결과
-# if len(list_face_detected) == 1:
-#     print('[SUCCESS] ONE FACE DETECTED')
-#     print(list_face_detected[0])
-# elif len(list_face_detected) == 0:
-#     print('[ERROR] FACE IS NOT DETECTED')
-# else:
-#     print('[ERROR] A LOT OF FACES ARE DETECTED')
 

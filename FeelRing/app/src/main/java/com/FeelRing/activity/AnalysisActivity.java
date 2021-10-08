@@ -6,6 +6,8 @@ import android.util.Log;
 
 import com.FeelRing.R;
 import com.FeelRing.network.NetworkManager;
+import com.FeelRing.network.ResFile;
+import com.FeelRing.network.ResMusic;
 import com.FeelRing.utils.Const;
 
 import org.jetbrains.annotations.NotNull;
@@ -25,9 +27,9 @@ public class AnalysisActivity extends BaseActivity {
     final String activityName = "::AnalysisActivity";
     String photoPath;
     File photoFile;
-    ArrayList<String> resFile;
-    ArrayList<String> resMusic1;
-    ArrayList<String> resMusic2;
+    String requestUrl;
+    ResFile resFile;
+    ArrayList<ResMusic> resMusics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,21 +39,21 @@ public class AnalysisActivity extends BaseActivity {
         Intent intent = getIntent();
         photoPath = intent.getStringExtra("photoPath");
         photoFile = new File(photoPath);
+        requestUrl = getResources().getString(R.string.upload_file_url);
+
 
         if (photoFile != null) {
             Log.d(Const.TAG + activityName, "(3) take pic :: photo file is NOT null!! :: size = " + photoFile.length() / 1024 + "KB");
-            //requestUploadFile("http://203.252.166.75:8080/api/test");
-            //requestUploadFile(String.valueOf(R.string.upload_file_url));
+            requestUploadFile(requestUrl);
 
-            String emotion = "행복";
-            Intent newIntent = new Intent(getActivity(), ResultActivity.class);
-            newIntent.putExtra("emotion", emotion);
-            startActivity(newIntent);
+//            String emotion = "행복";
+//            Intent newIntent = new Intent(getActivity(), ResultActivity.class);
+//            newIntent.putExtra("emotion", emotion);
+//            startActivity(newIntent);
         } else {
             Log.d(Const.TAG + activityName, "(3) take pic :: photo file is null!!");
             finish();
         }
-
     }
 
     // 서버 통신 - 파일 업로드 요청
@@ -74,19 +76,11 @@ public class AnalysisActivity extends BaseActivity {
                     // TODO(2): 결과 나오면 감정 다음 액티비티에 넘겨주기
                     if (body != null) {
                         String json = body.string();
-                        Log.d(Const.TAG + activityName, "res json :: " + json);
+                        Log.d(Const.TAG, "res json:: " + json);
+                        Log.d(Const.TAG, "res json length:: " + json.length());
 
                         try {
-                            resFile  = new ArrayList<String>();
-
-                            JSONObject jsonObject = new JSONObject(json);
-                            resFile.add(jsonObject.getString("emotion"));
-                            resFile.add(jsonObject.getString("fileName"));
-                            resFile.add(jsonObject.getString("fileDownloadUri"));
-                            resFile.add(jsonObject.getString("fileType"));
-                            resFile.add(jsonObject.getString("size"));
-
-                            Log.d(Const.TAG + activityName, "res json parse :: " + resFile.get(0) + " " + resFile.get(1) + " " + resFile.get(2) + " " + resFile.get(3) + " " + resFile.get(4));
+                            parsingJson(json);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -95,8 +89,7 @@ public class AnalysisActivity extends BaseActivity {
 
                     Intent intent = new Intent(getActivity(), ResultActivity.class);
                     intent.putExtra("fileInfo", resFile);
-                    intent.putExtra("musicInfo1", resMusic1);
-                    intent.putExtra("musicInfo2", resMusic1);
+                    intent.putExtra("musicInfo", resMusics);
                     startActivity(intent);
 
                     runOnUiThread(new Runnable() {
@@ -108,11 +101,52 @@ public class AnalysisActivity extends BaseActivity {
                 }
                 else {
                     Log.d(Const.TAG + activityName, "call fail(2)");
-                    showToast(R.string.fail_request);
+                    //showToast(R.string.fail_request);
                     finish();
                 }
             }
         });
+    }
+
+    private void parsingJson(String json) throws JSONException {
+        if (json.length() == 4) {
+            // TODO: 이전 액티비티에 실패했다고 알려주기
+
+            Log.d(Const.TAG, "json is null");
+            finish();
+        }
+
+        JSONObject jsonObject = new JSONObject(json);
+
+        // 파일 파싱
+        JSONObject fileObject = jsonObject.getJSONObject("file");
+
+        resFile = new ResFile();
+        resFile.setEmotion(fileObject.getString("emotion"));
+        resFile.setFileName(fileObject.getString("fileName"));
+        resFile.setFileSize(fileObject.getString("fileSize"));
+        resFile.setFileType(fileObject.getString("fileType"));
+
+        // 음악 파싱
+        resMusics = new ArrayList<>();
+        for (int i = 1; i < 3; i++) {
+            String music = "music" + i;
+            JSONObject musicObject = jsonObject.getJSONObject(music);
+
+            ResMusic resMusic = new ResMusic();
+            resMusic.setId(musicObject.getString("id"));
+            resMusic.setThumbnail(musicObject.getString("thumbnail"));
+            resMusic.setTitle(musicObject.getString("title"));
+
+            resMusics.add(resMusic);
+        }
+
+        Log.d(Const.TAG + activityName, resFile.getEmotion() + " " + resFile.getFileName() + " " + resFile.getFileSize() + " " + resFile.getFileType());
+
+        for (int i = 0; i < resMusics.size(); i++) {
+            Log.d(Const.TAG + activityName, resMusics.get(i).getId() + " " + resMusics.get(i).getThumbnail() + " " + resMusics.get(i).getTitle());
+        }
+
     }
 
     @Override

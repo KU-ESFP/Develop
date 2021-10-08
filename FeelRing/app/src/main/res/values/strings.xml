@@ -4,16 +4,16 @@
     <!-- url  -->
     <string name="server_ip">203.252.166.75</string>
     <string name="test_url">http://203.252.166.75:8080/api/test</string>
-    <string name="upload_file_url">http://203.252.166.75:8080/uploadFile</string>
+    <string name="upload_file_url">http://203.252.166.75:8000/</string>
 
     <string name="youtube_basic">https://www.youtube.com/watch?v=</string>
     <string name="youtube_playlist">https://www.youtube.com/playlist?list=</string>
     <string name="pl_test">PL0ZFmU0U5awl8kWyqNXzTadjSgx7cm3fl</string>
-    <string name="pl_happy">test</string>
-    <string name="pl_sad">test</string>
-    <string name="pl_surprise">test</string>
+    <string name="pl_happy">PL0ZFmU0U5awl1Dnw9N7IYM4LnipcNeQC5</string>
+    <string name="pl_sad">PL0ZFmU0U5awnihH1WlzhUaMxb5087uLN1</string>
+    <string name="pl_surprise">PL0ZFmU0U5awkTAmznnrT8uCxZ8bybTVth</string>
     <string name="pl_angry">test</string>
-    <string name="pl_neutral">test</string>
+    <string name="pl_neutral">PL0ZFmU0U5awmBHOsI2aiQnvE4Bj6eiwmm</string>
 
     <!--    -->
     <string name="network_not_connected">인터넷이 연결되지 않았습니다.</string>
@@ -31,7 +31,7 @@
     <string name="question_music">더 많은 음악을 듣고 싶다면</string>
     <string name="go_youtube">유튜브 재생목록 바로 가기</string>
     <string name="your_feeling"> 님의 감정은</string>
-    <string name="is_emotion"> 이네요!</string>
+    <string name="is_emotion">이네요!</string>
     <string name="question_replay">다시 하고 싶다면</string>
     <string name="go_home">홈으로</string>
 

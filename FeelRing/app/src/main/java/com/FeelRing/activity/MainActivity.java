@@ -45,11 +45,9 @@ public class MainActivity extends BaseActivity {
     String photoPath;
     Uri photoURI;
 
-    //ArrayList<String> resFile;
 
     final static int REQUEST_TAKE_PHOTO = 1;
     final static int REQUEST_READ_PHOTO = 2;
-    final static int REQUEST_CROP_PHOTO = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,21 +109,6 @@ public class MainActivity extends BaseActivity {
             }
         });
 
-        //        bt_camera.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Log.d(Const.TAG, "camera button click");
-//                captureCamera();
-//            }
-//        });
-//
-//        bt_gallery.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Log.d(Const.TAG, "gallery button click");
-//                readGallery();
-//            }
-//        });
     }
 
     private CharSequence[] imageChooser = {"사진 촬영", "갤러리에서 가져오기"};
@@ -175,56 +158,6 @@ public class MainActivity extends BaseActivity {
             Log.d(Const.TAG + activityName, "Permission: " + permissions[0] + "was " + grantResults[0]);
         }
     }
-
-    // 서버 통신 - 파일 업로드 요청
-//    private void requestUploadFile(String url) {
-//        NetworkManager.requestEmotion(url, photoFile, new Callback() {
-//            @Override
-//            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-//                Log.d(Const.TAG, "call fail(1)");
-//                e.printStackTrace();
-//            }
-//
-//            @Override
-//            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-//                if (response.isSuccessful())  {
-//                    Log.d(Const.TAG, "call success");
-//                    ResponseBody body = response.body();
-//
-//                    // TODO(1): 분석하기 누르면 응답 기다리는 동안 프로그레스바 실행 및 화면 못 만지게 멈추기
-//                    // TODO(2): 결과 나오면 감정 다음 액티비티에 넘겨주기
-//                    if (body != null) {
-//                        String json = body.string();
-//                        Log.d(Const.TAG, "res json :: " + json);
-//
-//                        try {
-//                            resFile  = new ArrayList<String>();
-//
-//                            JSONObject jsonObject = new JSONObject(json);
-//                            resFile.add(jsonObject.getString("emotion"));
-//                            resFile.add(jsonObject.getString("fileName"));
-//                            resFile.add(jsonObject.getString("fileDownloadUri"));
-//                            resFile.add(jsonObject.getString("fileType"));
-//                            resFile.add(jsonObject.getString("size"));
-//
-//                            Log.d(Const.TAG, "res json parse :: " + resFile.get(0) + " " + resFile.get(1) + " " + resFile.get(2) + " " + resFile.get(3) + " " + resFile.get(4));
-//
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//
-//                    runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//
-//                        }
-//                    });
-//                }
-//                else Log.d(Const.TAG, "call fail(2)");
-//            }
-//        });
-//    }
 
     // 카메라로 찍은 사진 저장하기 위한 파일 생성
     private File createImageFile() throws IOException {
@@ -305,8 +238,8 @@ public class MainActivity extends BaseActivity {
                 case REQUEST_READ_PHOTO: {
                     photoURI = data.getData();
                     setPhotoPath(photoURI);
-
                     Log.d(Const.TAG + activityName, "(2) gallery photo uri == " + photoURI);
+
                     Glide.with(getApplicationContext()).load(photoURI).into(ivPhoto);
 
                     if (photoFile != null) {

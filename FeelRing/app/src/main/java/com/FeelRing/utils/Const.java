@@ -17,4 +17,7 @@ public class Const {
     // Type
     public static int CAMERA                          = 1001;
     public static int READ                            = 1002;
+
+    public int REQ_FILE_UPLOAD                 = 1;
+
 }

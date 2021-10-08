@@ -1,7 +1,10 @@
 package com.FeelRing.activity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,21 +15,23 @@ import android.widget.TextView;
 
 import com.FeelRing.R;
 import com.FeelRing.datebase.DBOpenHelper;
+import com.FeelRing.network.ResFile;
+import com.FeelRing.network.ResMusic;
 import com.FeelRing.utils.Const;
 
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class ResultActivity extends BaseActivity {
     final String activityName = "::ResultActivity";
 
     String name;
-    String emotion;
     DBOpenHelper dbHelper;
 
     // 인텐트 엑스트라 값
-    ArrayList<String> fileInfo;
-    ArrayList<String> musicInfo1;
-    ArrayList<String> musicInfo2;
+    ResFile fileInfo;
+    ArrayList<ResMusic> musicInfo;
 
     // 감정 분석 결과 위젯 필드
     TextView tvName;
@@ -53,20 +58,13 @@ public class ResultActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
 
-        Intent intent = getIntent();
-        emotion = intent.getStringExtra("emotion");
-        name = getNameColumn();
-
-        // TODO: 실제론 어레이로 인텐트 받아옴 분석결과 / 음악1 / 음악2
-        // fileInfo = intent.getStringArrayListExtra("fileInfo");
-        // musicInfo1 = intent.getStringArrayListExtra("musicInfo1");
-        // musicInfo2 = intent.getStringArrayListExtra("musicInfo2");
-
         initFields();
         initControls();
     }
 
     private void initFields() {
+        name = getNameColumn();
+
         // 감정 분석 결과 위젯 필드
         tvName = (TextView) findViewById(R.id.tv_name);
         tvEmotion = (TextView) findViewById(R.id.tv_emotion);
@@ -90,28 +88,30 @@ public class ResultActivity extends BaseActivity {
         playListName = getResources().getString(R.string.pl_test);
         // playListName = getPlayListName(emotion);
 
+        // 인텐트 엑스트라 가져오기
+        Intent intent = getIntent();
+        musicInfo = new ArrayList<>();
+        fileInfo = intent.getParcelableExtra("fileInfo");
+        musicInfo = (ArrayList<ResMusic>) intent.getSerializableExtra("musicInfo");
+
+        tvName.setText(name);
+        tvEmotion.setText(fileInfo.getEmotion());
+
+        tvTitle1.setText(musicInfo.get(0).getTitle());
+        tvTitle1.setSelected(true);
+        tvTitle2.setText(musicInfo.get(1).getTitle());
+        tvTitle2.setSelected(true);
+
+        new LoadImage().execute(musicInfo.get(0).getThumbnail(), musicInfo.get(1).getThumbnail());
     }
 
     private void initControls() {
-        tvName.setText(name);
-        tvEmotion.setText(emotion);
-
-        // TODO: 인텐트값 각 위젯에 설정
-//        ivThumnail1.setImageBitmap(musicInfo1.썸네일1);
-//        ivThumnail2.setImageBitmap(musicInfo2.썸네일2);
-//        tvTitle1.setText(musicInfo1.타이틀1);
-//        tvTitle2.setText(musicInfo1.타이틀2);
-
         llMusic1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: 음악1 유튜브 링크 연결
                 Log.d(Const.TAG + activityName, "click music 1");
 
-                String youtubeUri = youtubeBasic + "4TWR90KJl84";
-                Log.d(Const.TAG + activityName, "check youtube url = " + youtubeUri);
-
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(youtubeUri));
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getMusicUri(musicInfo.get(0))));
                 startActivity(intent);
             }
         });
@@ -119,15 +119,10 @@ public class ResultActivity extends BaseActivity {
         llMusic2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: 음악2 유튜브 링크 연결
                 Log.d(Const.TAG + activityName, "click music 2");
 
-                String youtubeUri = youtubeBasic + "rrUxPFklKS8";
-                Log.d(Const.TAG + activityName, "check youtube url = " + youtubeUri);
-
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(youtubeUri));
-                startActivity(intent);
-            }
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getMusicUri(musicInfo.get(1))));
+                startActivity(intent);            }
         });
 
         btYoutube.setOnClickListener(new View.OnClickListener() {
@@ -136,12 +131,8 @@ public class ResultActivity extends BaseActivity {
                 // TODO: 감정에 따른 유튜브 재생목록 재생
                 Log.d(Const.TAG + activityName, "click youtube");
 
-                String youtubeUri = youtubePlaylist + playListName;
-                Log.d(Const.TAG + activityName, "check youtube url = " + youtubeUri);
-
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(youtubeUri));
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getPlayListUrl(fileInfo.getEmotion())));
                 startActivity(intent);
-
             }
         });
 
@@ -155,7 +146,13 @@ public class ResultActivity extends BaseActivity {
         });
     }
 
-    private String getPlayListName(String emotion) {
+    private String getMusicUri(ResMusic resMusic) {
+        String youtubeUri = youtubeBasic + resMusic.getId();
+        Log.d(Const.TAG + activityName, "check youtube url = " + youtubeUri);
+        return youtubeUri;
+    }
+
+    private String getPlayListUrl(String emotion) {
         String plName = "";
 
         switch (emotion) {
@@ -176,6 +173,45 @@ public class ResultActivity extends BaseActivity {
                 break;
         }
 
-        return plName;
+        return youtubePlaylist + plName;
     }
+
+    public class LoadImage extends AsyncTask<String, String, Bitmap[]> {
+        String className = "::LoadImage.class";
+        Bitmap[] mBitmap = new Bitmap[2];
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            Log.d(Const.TAG + className, "preExcute ...");
+        }
+
+        @Override
+        protected Bitmap[] doInBackground(String... args) {
+            Log.d(Const.TAG + className, "download ...");
+
+            Log.d(Const.TAG + className, "url 1 = " + args[0]);
+            Log.d(Const.TAG + className, "url 2 = " + args[1]);
+
+            try {
+                mBitmap[0] = BitmapFactory.decodeStream((InputStream) new URL(args[0]).getContent());
+                mBitmap[1] = BitmapFactory.decodeStream((InputStream) new URL(args[1]).getContent());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return mBitmap;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap[] image) {
+            if (image != null) {
+                ivThumnail1.setImageBitmap(image[0]);
+                ivThumnail2.setImageBitmap(image[1]);
+            } else {
+                Log.d(Const.TAG + className, "image is null");
+            }
+        }
+
+    }
+
 }

@@ -30,7 +30,7 @@
                     android:id="@+id/tv_name"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:textColor="@color/purple_700"
+                    android:textColor="@color/serve_color"
                     android:textSize="30dp"
                     tools:text="ㅇㅇㅇ"
                     />
@@ -55,7 +55,7 @@
                     android:id="@+id/tv_emotion"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:textColor="@color/purple_700"
+                    android:textColor="@color/serve_color"
                     android:textSize="30dp"
                     tools:text="행복"
                     />
@@ -76,7 +76,7 @@
             android:orientation="vertical"
             android:layout_margin="10dp"
             android:padding="10dp"
-            android:background="@color/gray">
+            android:background="@color/ivory_color">
 
             <TextView
                 android:layout_width="wrap_content"

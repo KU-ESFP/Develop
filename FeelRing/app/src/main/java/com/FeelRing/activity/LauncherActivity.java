@@ -24,6 +24,8 @@ public class LauncherActivity extends BaseActivity {
     TextView tvVersion;
     CHECK_STATUS STATUS = CHECK_STATUS.STATUS_NETWORK;
     Context context;
+    
+    // TODO: 런처 시간 늦추기
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

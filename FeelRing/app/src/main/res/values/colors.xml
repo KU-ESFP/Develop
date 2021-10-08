@@ -10,5 +10,10 @@
     <color name="red">#FF0000</color>
     <color name="gray">#DCDCDC</color>
 
+    <color name="main_color">#8c976b</color>
+    <color name="serve_color">#5e6c47</color>
+    <color name="ivory_color">#e5deca</color>
+    <color name="beige_color">#c9bda1</color>
+
 
 </resources>

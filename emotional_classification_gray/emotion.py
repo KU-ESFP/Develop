@@ -18,11 +18,17 @@ path = "trained_models/emotion_models/new_model3.pth"
 model.load_state_dict(torch.load(path))
 model.eval()
 
-# Image to detect face (RGB to Gray)
-img = cv2.imread('input_images/img_1.jpg')
+img = cv2.imread('input_images/suz.jpg')
 if img is None:
     print('[ERROR] IMAGE IS NONE')
     exit()
+
+# 3:4 비율에 맞게 이미지 크기 변환
+ratio = 300.0 / img.shape[1]
+dim = (300, int(img.shape[0] * ratio))
+img = cv2.resize(img, dim, interpolation=cv2.INTER_AREA)
+
+# Image to detect face (RGB to Gray)
 img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
 # Face detection within the image
@@ -51,16 +57,16 @@ for (x, y, w, h) in face:
     cv2.putText(img, classes[pred], (x - 10, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2, cv2.LINE_AA)
 
 # 이미지 확인할 때 사용
-# cv2.imshow('detect', img)
-# cv2.waitKey(0)
-# cv2.destroyAllWindows()
+cv2.imshow('detect', img)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
 
-# 얼굴 검출에 따른 결과
-if len(list_face_detected) == 1:
-    print('[SUCCESS] ONE FACE DETECTED')
-    print(list_face_detected[0])
-elif len(list_face_detected) == 0:
-    print('[ERROR] FACE IS NOT DETECTED')
-else:
-    print('[ERROR] A LOT OF FACES ARE DETECTED')
+# # 얼굴 검출에 따른 결과
+# if len(list_face_detected) == 1:
+#     print('[SUCCESS] ONE FACE DETECTED')
+#     print(list_face_detected[0])
+# elif len(list_face_detected) == 0:
+#     print('[ERROR] FACE IS NOT DETECTED')
+# else:
+#     print('[ERROR] A LOT OF FACES ARE DETECTED')
 

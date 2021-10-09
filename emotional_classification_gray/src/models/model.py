@@ -1,6 +1,14 @@
 import torch.nn as nn
 import torch.nn.functional as F
 
+'''
+    [Convolution] - (1, 48, 48)
+    W: 너비
+    K: kernel_size
+    P: padding
+    S: stride
+    = (W - K + P * 2) / S + 1
+'''
 
 # Define a convolution neural network
 class Network(nn.Module):

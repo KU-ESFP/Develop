@@ -14,7 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.FeelRing.R;
-import com.FeelRing.datebase.DBOpenHelper;
 import com.FeelRing.network.ResFile;
 import com.FeelRing.network.ResMusic;
 import com.FeelRing.utils.Const;
@@ -27,7 +26,6 @@ public class ResultActivity extends BaseActivity {
     final String activityName = "::ResultActivity";
 
     String name;
-    DBOpenHelper dbHelper;
 
     // 인텐트 엑스트라 값
     ResFile fileInfo;
@@ -51,7 +49,7 @@ public class ResultActivity extends BaseActivity {
 
     String youtubeBasic;
     String youtubePlaylist;
-    String playListName;
+    String playlistName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +83,7 @@ public class ResultActivity extends BaseActivity {
         youtubePlaylist = getResources().getString(R.string.youtube_playlist);
         
         // TODO: 감정에 따라서 재생목록 이름 가져오기
-        playListName = getResources().getString(R.string.pl_test);
+        playlistName = getResources().getString(R.string.pl_test);
         // playListName = getPlayListName(emotion);
 
         // 인텐트 엑스트라 가져오기
@@ -131,7 +129,7 @@ public class ResultActivity extends BaseActivity {
                 // TODO: 감정에 따른 유튜브 재생목록 재생
                 Log.d(Const.TAG + activityName, "click youtube");
 
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getPlayListUrl(fileInfo.getEmotion())));
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getPlaylistUrl(fileInfo.getEmotion())));
                 startActivity(intent);
             }
         });
@@ -152,7 +150,7 @@ public class ResultActivity extends BaseActivity {
         return youtubeUri;
     }
 
-    private String getPlayListUrl(String emotion) {
+    private String getPlaylistUrl(String emotion) {
         String plName = "";
 
         switch (emotion) {

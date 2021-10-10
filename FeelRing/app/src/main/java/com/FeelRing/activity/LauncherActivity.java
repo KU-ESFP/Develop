@@ -111,16 +111,6 @@ public class LauncherActivity extends BaseActivity {
         return true;
     }
 
-    // 3. 닉네임 있는 지 확인
-    private boolean checkNickName() {
-        if (getNickName().length() > 0) {
-            Log.d(Const.TAG, "Nick name == " + getNickName());
-            return true;
-        } else {
-            Log.d(Const.TAG, "Nick name is not exist");
-            return false;
-        }
-    }
 
 
 

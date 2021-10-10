@@ -21,7 +21,6 @@ import java.io.File;
 public class BaseActivity extends AppCompatActivity {
     final String activityName = "::AnalysisActivity";
 
-    private String nickName = "";
     public static DBOpenHelper dbHelper;
     public Uri photoURI;
     public File photoFile;
@@ -30,14 +29,6 @@ public class BaseActivity extends AppCompatActivity {
 
     public BaseActivity getActivity() {
         return this;
-    }
-
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
-    }
-
-    public String getNickName() {
-        return this.nickName;
     }
 
     public String getAppVersionName() {

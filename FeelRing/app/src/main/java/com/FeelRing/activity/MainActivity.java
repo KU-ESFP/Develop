@@ -208,7 +208,7 @@ public class MainActivity extends BaseActivity {
         cursor.moveToFirst();
         return cursor.getString(column_index);
     }
-    
+
     // 절대경로 설정해서 포토파일에 덮어씌우는 메서드
     private void setPhotoPath(Uri photoURI) {
         photoPath = getRealPathFromURI(photoURI);

@@ -1,4 +1,4 @@
 train, test datasets
 *
-# Except this file
 !.gitignore
+!crop_img.py

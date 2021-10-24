@@ -1,5 +1,5 @@
 # Description
-Building a server to link Android and models
+  Building a server to link Android and models
 
 # Setting
 - python 3.7.10
@@ -18,7 +18,7 @@ Building a server to link Android and models
 # Instructions
 ## Start Server
 
-  python upload.py
+    python upload.py
 
 
 

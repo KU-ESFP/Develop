@@ -5,7 +5,7 @@ import torch
 import torchvision.transforms as transforms
 
 from PIL import Image
-from src.models.model import LeNet
+from src.models.model import LeNet, Network
 
 # Face detection: Load classifiers stored in XML format
 face_cascade = cv2.CascadeClassifier('./trained_models/detection_models/haarcascade_frontalface_default.xml')
@@ -13,8 +13,8 @@ face_cascade = cv2.CascadeClassifier('./trained_models/detection_models/haarcasc
 # Model load
 classes = ['angry', 'happy', 'neutral', 'sad', 'surprised']
 # emotion_classifier = torch.load(emotion_model_path)
-model = LeNet(num_classes=5)
-path = "trained_models/emotion_models/new_model3.pth"
+model = Network(num_classes=5)
+path = "trained_models/emotion_models/new_model_Network_01.pth"
 model.load_state_dict(torch.load(path))
 model.eval()
 
@@ -24,8 +24,8 @@ if img is None:
     exit()
 
 # 3:4 비율에 맞게 이미지 크기 변환
-ratio = 300.0 / img.shape[1]
-dim = (300, int(img.shape[0] * ratio))
+ratio = 600.0 / img.shape[1]
+dim = (600, int(img.shape[0] * ratio))
 img = cv2.resize(img, dim, interpolation=cv2.INTER_AREA)
 
 # Image to detect face (RGB to Gray)
@@ -38,7 +38,7 @@ face = face_cascade.detectMultiScale(img_gray, 1.3, 5)
 list_face_detected = []
 for (x, y, w, h) in face:
     cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 2)
-    face_boundary = img_gray[y-50:y+h+50, x-50:x+w+50]
+    face_boundary = img_gray[y:y+h, x:x+w]
 
     transform = transforms.Compose([
         transforms.Resize((48, 48)),

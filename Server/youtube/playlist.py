@@ -11,7 +11,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium import webdriver
 from selenium.webdriver.support.wait import WebDriverWait
 
-from youtube.private_key import ID, PASSWORD
+from Server.youtube.private_key import ID, PASSWORD
 
 try:
     shutil.rmtree(r"C:\chrometemp")  # remove Cookie, Cache files
@@ -105,7 +105,6 @@ for index, emotion in enumerate(emotion_list):
     file_path = './output_url/' + emotion + '.txt'
     f = open(file_path, 'rt', encoding='UTF-8')
     lines = f.readlines()
-
 
     time.sleep(5)
     for song_url in lines:

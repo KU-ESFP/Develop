@@ -1,5 +1,5 @@
 import os
-from youtube import music_info
+from Server.youtube import music_info
 
 emotion_list = ['angry', 'happy', 'neutral', 'sad', 'surprised']
 

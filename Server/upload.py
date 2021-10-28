@@ -1,13 +1,13 @@
 from flask import jsonify
 import os
 from flask import Flask, request
-from emotional_classification_gray import Emotion
-from youtube import music_info
+from Server.emotional_classification_gray_gpu import Emotion
+from Server.youtube import music_info
 import random
 
-UPLOAD_FOLDER = 'emotional_classification_gray/input_images/'
+UPLOAD_FOLDER = 'emotional_classification_gray_gpu/input_images/'
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
-
+emotion_list = ['angry', 'happy', 'neutral', 'sad', 'surprised']
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -18,7 +18,7 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 root_dir = os.path.dirname(os.path.realpath(__file__))
-images_path = root_dir + '/emotional_classification_gray/input_images/'
+images_path = root_dir + '/emotional_classification_gray_gpu/input_images/'
 
 def deleteInputImage():
     for input_image in os.listdir(images_path):
@@ -45,7 +45,13 @@ def makeRandNum(count_music):
 
     return random_number
 
-
+def getId(index):
+    f = open('youtube/playlist_url/playlist_id.txt', mode='r')
+    id_list = []
+    for line in f:
+        id_list.append(line)
+    f.close()
+    return id_list[index]
 
 
 @app.route('/', methods=['POST'])
@@ -68,9 +74,10 @@ def fileUpload():
                 music_list = info_list[1]
                 count_music = info_list[0]
                 num1, num2 = makeRandNum(count_music)
-                #index = playlist.emotion_list.index(emotion)
+                index = emotion_list.index(emotion)
+                playlist_id = getId(index)
                 return jsonify({"file": {"emotion" : emotion, "fileName": filename, "fileType": fileType, "fileSize": fileSize},
-                                #"playlist_id" : playlist.url_list[index],
+                                "playlist_id" : playlist_id,
                                 "music1": music_info.search_music(music_list[num1]),
                                 "music2": music_info.search_music(music_list[num2])})
     return

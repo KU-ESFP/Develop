@@ -79,8 +79,8 @@ Security
 Status
 
 
-Server/emotional_classification_gray/input_images/
-Server/emotional_classification_gray/trained_models/
+Server/emotional_classification_gray_gpu/input_images/
+Server/emotional_classification_gray_gpu/trained_models/
 Server/music_classification/input_top100/
 Server/music_classification/output_top100/
 Server/music_classification/trained_models/
@@ -90,6 +90,8 @@ Server/youtube/95/
 Server/youtube/output_url/
 Server/youtube/playlist_url/
 Server/youtube/private_key.py
+Server/emotional_classification_gray_gpu/clean_datasets/
+
 .idea/
 
 

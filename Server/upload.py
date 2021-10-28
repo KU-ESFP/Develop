@@ -8,6 +8,7 @@ import random
 UPLOAD_FOLDER = 'emotional_classification_gray/input_images/'
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
+
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
@@ -46,6 +47,7 @@ def makeRandNum(count_music):
 
 
 
+
 @app.route('/', methods=['POST'])
 def fileUpload():
 
@@ -66,7 +68,9 @@ def fileUpload():
                 music_list = info_list[1]
                 count_music = info_list[0]
                 num1, num2 = makeRandNum(count_music)
+                #index = playlist.emotion_list.index(emotion)
                 return jsonify({"file": {"emotion" : emotion, "fileName": filename, "fileType": fileType, "fileSize": fileSize},
+                                #"playlist_id" : playlist.url_list[index],
                                 "music1": music_info.search_music(music_list[num1]),
                                 "music2": music_info.search_music(music_list[num2])})
     return

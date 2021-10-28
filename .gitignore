@@ -84,8 +84,11 @@ Server/emotional_classification_gray/trained_models/
 Server/music_classification/input_top100/
 Server/music_classification/output_top100/
 Server/music_classification/trained_models/
+Server/95/
 Server/youtube/94/
+Server/youtube/95/
 Server/youtube/output_url/
+Server/youtube/playlist_url/
 Server/youtube/private_key.py
 .idea/
 

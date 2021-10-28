@@ -100,7 +100,7 @@ melon = req.get(url, headers=header)
 melon_html = melon.text
 melon_parse = bs(melon_html, 'html.parser')
 
-driver = webdriver.Chrome(executable_path='D:\chromedriver\chromedriver.exe')
+driver = webdriver.Chrome(executable_path='C:\chromedriver\chromedriver.exe')
 driver.get(url)
 time.sleep(1)
 action = ActionChains(driver)

@@ -37,14 +37,11 @@ except:
 driver.implicitly_wait(10)
 
 emotion_list = ['angry', 'happy', 'neutral', 'sad', 'surprised']
-url_list = []
+new_url_list = []
+del_url_list = []
 
 
-output_path = "./playlist_url"
-for emotion in os.listdir(output_path):
-    if os.path.isfile(os.path.join(output_path, emotion)):
-        os.remove(os.path.join(output_path, emotion))
-
+# 재생목록 로그인 화면
 driver.get(url='https://studio.youtube.com/channel/UCWXHfwdEQ0mMALIOj0_gDfQ/playlists')
 time.sleep(3)
 pyautogui.write(ID)  # Fill in your ID or E-mail
@@ -54,6 +51,34 @@ time.sleep(3)  # wait a process
 pyautogui.write(PASSWORD)  # Fill in your PW
 pyautogui.press('enter')
 time.sleep(5)
+
+#재생목록 삭제
+
+file_path = './playlist_url/playlist_id.txt'
+f = open(file_path, 'rt', encoding='UTF-8')
+del_url_list = f.readlines()
+f.close()
+
+for index in range(5):
+    driver.get(url='https://www.youtube.com/playlist?list=' + del_url_list[index])
+    time.sleep(3)
+    driver.find_element_by_xpath('/html/body/ytd-app/div/ytd-page-manager/ytd-browse/ytd-playlist-sidebar-renderer/div/ytd-playlist-sidebar-primary-info-renderer/div[4]/ytd-menu-renderer/yt-icon-button/button').send_keys(Keys.ENTER)  # 3개 점 버튼
+    driver.find_element_by_xpath('/html/body/ytd-app/ytd-popup-container/tp-yt-iron-dropdown/div/ytd-menu-popup-renderer/tp-yt-paper-listbox/ytd-menu-service-item-renderer[5]').send_keys(Keys.ENTER)  # 동영상 삭제 버튼
+    time.sleep(1)
+    driver.find_element_by_xpath('/html/body/ytd-app/ytd-popup-container/tp-yt-paper-dialog/yt-confirm-dialog-renderer/div[2]/div/yt-button-renderer[2]/a/tp-yt-paper-button').send_keys(Keys.ENTER) #삭제 확인 버튼
+    time.sleep(5)
+
+#playlist_id.txt 삭제
+root_dir = os.path.dirname(os.path.realpath(__file__))
+print(root_dir)
+url_path = root_dir + '\playlist_url\\'
+for url in os.listdir(url_path):
+    if os.path.isfile(os.path.join(url_path, url)):
+        os.remove(os.path.join(url_path, url))
+
+#재생목록 만들고 id 얻기
+driver.get(url='https://studio.youtube.com/channel/UCWXHfwdEQ0mMALIOj0_gDfQ/playlists')
+time.sleep(3)
 for emotion in emotion_list:
     driver.find_element_by_xpath('/html/body/ytcp-app/ytcp-entity-page/div/div/main/div/ytcp-animatable[1]/div[1]/ytcp-button').send_keys(Keys.ENTER)
     driver.find_element_by_xpath('/html/body/ytcp-playlist-creation-dialog/ytcp-dialog/tp-yt-paper-dialog/div[2]/div/div[1]/ytcp-form-textarea/div/textarea').send_keys(Keys.ENTER)
@@ -74,16 +99,17 @@ for emotion in emotion_list:
     #url_list.append(id[38:])
     #print(url_list)
 
-    file_path = './playlist_url/playlist_id.txt'
-    f = open(file_path, 'rt', encoding='UTF-8')
-    url_list = f.readlines()
+file_path = './playlist_url/playlist_id.txt'
+f = open(file_path, 'rt', encoding='UTF-8')
+new_url_list = f.readlines()
+f.close()
 
-
+#재생목록에 노래 추가
 for index, emotion in enumerate(emotion_list):
     time.sleep(3)
     # YouTube Login - Chrome
     driver.get(
-        url='https://accounts.google.com/signin/v2/identifier?service=youtube&uilel=3&passive=true&continue=https%3A%2F%2Fwww.youtube.com%2Fsignin%3Faction_handle_signin%3Dtrue%26app%3Ddesktop%26hl%3Dko%26next%3Dhttps%253A%252F%252Fwww.youtube.com%252Fplaylist%253Flist%253D' + url_list[index] + '&hl=ko&ec=65620&flowName=GlifWebSignIn&flowEntry=ServiceLogin'
+        url='https://accounts.google.com/signin/v2/identifier?service=youtube&uilel=3&passive=true&continue=https%3A%2F%2Fwww.youtube.com%2Fsignin%3Faction_handle_signin%3Dtrue%26app%3Ddesktop%26hl%3Dko%26next%3Dhttps%253A%252F%252Fwww.youtube.com%252Fplaylist%253Flist%253D' + new_url_list[index] + '&hl=ko&ec=65620&flowName=GlifWebSignIn&flowEntry=ServiceLogin'
     )
 
     pyautogui.write(ID)                 # Fill in your ID or E-mail
@@ -105,6 +131,7 @@ for index, emotion in enumerate(emotion_list):
     file_path = './output_url/' + emotion + '.txt'
     f = open(file_path, 'rt', encoding='UTF-8')
     lines = f.readlines()
+    f.close()
 
     time.sleep(5)
     for song_url in lines:
@@ -130,3 +157,5 @@ for index, emotion in enumerate(emotion_list):
         driver.find_element_by_xpath('//*[@id="picker:ap:2"]').send_keys(Keys.ENTER)    # 동영상 추가 버튼 선택
         driver.switch_to.default_content()  # frame 화면으로 전환됐었던 걸 다시 원래대로 돌려놓기
         time.sleep(3)
+
+driver.close()

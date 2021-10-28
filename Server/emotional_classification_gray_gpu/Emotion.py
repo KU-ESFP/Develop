@@ -4,12 +4,12 @@ import torchvision.transforms as transforms
 import numpy as np
 
 from PIL import Image
-from emotional_classification_gray.src.models.model import LeNet
+from Server.emotional_classification_gray_gpu.src.models.model import LeNet
 
 
 def runEmotion(filename):
     # Face detection: Load classifiers stored in XML format
-    project = 'emotional_classification_gray'
+    project = 'emotional_classification_gray_gpu'
     file = 'haarcascade_frontalface_default.xml'
     face_cascade = cv2.CascadeClassifier(project + '/trained_models/detection_models/' + file)
 
@@ -17,30 +17,36 @@ def runEmotion(filename):
     classes = ['angry', 'happy', 'neutral', 'sad', 'surprised']
     # emotion_classifier = torch.load(emotion_model_path)
     model = LeNet(num_classes=5)
-    path = 'emotional_classification_gray/trained_models/emotion_models/new_model3.pth'
+    path = 'emotional_classification_gray_gpu/trained_models/emotion_models/new_model3.pth'
     model.load_state_dict(torch.load(path))
     model.eval()
 
     # Image to detect face (RGB to Gray)
     # 한글 경로 설정 문제 해결
-    img_array = np.fromfile('emotional_classification_gray/input_images/' + filename, np.uint8)
+    img_array = np.fromfile('emotional_classification_gray_gpu/input_images/' + filename, np.uint8)
     img = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
-    #img = cv2.imread('emotional_classification_gray/input_images/' + filename)
+    #img = cv2.imread('emotional_classification_gray_gpu/input_images/' + filename)
 
     if img is None:
         print('[ERROR] IMAGE IS NONE')
         exit()
 
+    # 3:4 비율에 맞게 이미지 크기 변환
+    ratio = 600.0 / img.shape[1]
+    dim = (600, int(img.shape[0] * ratio))
+    img = cv2.resize(img, dim, interpolation=cv2.INTER_AREA)
+
+    # Image to detect face (RGB to Gray)
     img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
     # Face detection within the image
     face = face_cascade.detectMultiScale(img_gray, 1.3, 5)
 
+    # 얼굴이 검출되면 검출된 얼굴 감정들 담기
     list_face_detected = []
-    # 얼굴이 검출되었다면 좌표 정보를 리턴받고, 없다면 오류 표출
     for (x, y, w, h) in face:
         cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 2)
-        face_boundary = img_gray[y-50:y+h+50, x-50:x+w+50]
+        face_boundary = img_gray[y:y+h, x:x+w]
 
         transform = transforms.Compose([
             transforms.Resize((48, 48)),

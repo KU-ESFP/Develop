@@ -1,15 +1,17 @@
+import os
 import torch
 import torch.nn as nn
 
 from torch.optim import Adam
 from torchsummary import summary
 
-from emotional_classification_gray.src.models.model import LeNet
+from emotional_classification_gray.src.models.model import LeNet, Network
 from emotional_classification_gray.src.utils.dataset import train_loader, test_loader
 import matplotlib.pyplot as plt
 import warnings
-warnings.filterwarnings("ignore", category=DeprecationWarning)
 
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
 
 # parameters
 batch_size = 32
@@ -20,8 +22,8 @@ num_classes = 5
 
 classes = ['angry', 'happy', 'neutral', 'sad', 'surprised']
 
-save_model_pth = "new_model4.pth"
-load_model_pth = "new_model4.pth"
+save_model_pth = "new_model_LeNet_02.pth"
+load_model_pth = "new_model_LeNet_02.pth"
 
 
 # Instantiate a neural network model
@@ -65,7 +67,7 @@ def train(num_epochs):
             features, labels = data
             labels = labels.to(device)
             features = features.to(device)
-            optimizer.zero_grad()  # 변화도(Gradient) 매개변수를 0으로 만듦
+            optimizer.zero_grad()                                               # 변화도(Gradient) 매개변수를 0으로 만듦
 
             # 순전파 + 역전파 + 최적화
             outputs = model(features)
@@ -159,11 +161,12 @@ if __name__ == "__main__":
 
     # Let's load the model we just created and test the accuracy per label
     model = LeNet(num_classes)
+    # model = Network(num_classes)
     model.load_state_dict(torch.load("../trained_models/emotion_models/" + load_model_pth))
 
     testClasses()
 
-    # ================================== 16218
+    # ==================================
     # === 학습/테스트, loss/정확도 시각화 ===
     plt.plot(range(len(train_losses)), train_losses, label='train loss')
     plt.plot(range(len(test_losses)), test_losses, label='test loss')

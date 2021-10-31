@@ -30,6 +30,7 @@ public class AnalysisActivity extends BaseActivity {
     String requestUrl;
     ResFile resFile;
     ArrayList<ResMusic> resMusics;
+    String playlistId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,10 +47,6 @@ public class AnalysisActivity extends BaseActivity {
             Log.d(Const.TAG + activityName, "(3) take pic :: photo file is NOT null!! :: size = " + photoFile.length() / 1024 + "KB");
             requestUploadFile(requestUrl);
 
-//            String emotion = "행복";
-//            Intent newIntent = new Intent(getActivity(), ResultActivity.class);
-//            newIntent.putExtra("emotion", emotion);
-//            startActivity(newIntent);
         } else {
             Log.d(Const.TAG + activityName, "(3) take pic :: photo file is null!!");
             finish();
@@ -88,6 +85,7 @@ public class AnalysisActivity extends BaseActivity {
                     }
 
                     Intent intent = new Intent(getActivity(), ResultActivity.class);
+                    intent.putExtra("playlistId", playlistId);
                     intent.putExtra("fileInfo", resFile);
                     intent.putExtra("musicInfo", resMusics);
                     startActivity(intent);
@@ -118,6 +116,9 @@ public class AnalysisActivity extends BaseActivity {
 
         JSONObject jsonObject = new JSONObject(json);
 
+        // 플레이리스트 아이디
+        playlistId = jsonObject.getString("playlist_id");
+
         // 파일 파싱
         JSONObject fileObject = jsonObject.getJSONObject("file");
 
@@ -141,7 +142,7 @@ public class AnalysisActivity extends BaseActivity {
             resMusics.add(resMusic);
         }
 
-        Log.d(Const.TAG + activityName, resFile.getEmotion() + " " + resFile.getFileName() + " " + resFile.getFileSize() + " " + resFile.getFileType());
+        Log.d(Const.TAG + activityName, playlistId + " " + resFile.getEmotion() + " " + resFile.getFileName() + " " + resFile.getFileSize() + " " + resFile.getFileType());
 
         for (int i = 0; i < resMusics.size(); i++) {
             Log.d(Const.TAG + activityName, resMusics.get(i).getId() + " " + resMusics.get(i).getThumbnail() + " " + resMusics.get(i).getTitle());

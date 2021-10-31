@@ -28,6 +28,7 @@ public class ResultActivity extends BaseActivity {
     String name;
 
     // 인텐트 엑스트라 값
+    String playlistId;
     ResFile fileInfo;
     ArrayList<ResMusic> musicInfo;
 
@@ -82,15 +83,16 @@ public class ResultActivity extends BaseActivity {
         youtubeBasic = getResources().getString(R.string.youtube_basic);
         youtubePlaylist = getResources().getString(R.string.youtube_playlist);
         
-        // TODO: 감정에 따라서 재생목록 이름 가져오기
-        playlistName = getResources().getString(R.string.pl_test);
-        // playListName = getPlayListName(emotion);
+        // 감정에 따라서 재생목록 이름 가져오기
+//        playlistName = getResources().getString(R.string.pl_test);
+//        // playListName = getPlayListName(emotion);
 
         // 인텐트 엑스트라 가져오기
         Intent intent = getIntent();
         musicInfo = new ArrayList<>();
         fileInfo = intent.getParcelableExtra("fileInfo");
         musicInfo = (ArrayList<ResMusic>) intent.getSerializableExtra("musicInfo");
+        playlistId = intent.getStringExtra("playlistId");
 
         tvName.setText(name);
         tvEmotion.setText(fileInfo.getEmotion());
@@ -129,7 +131,7 @@ public class ResultActivity extends BaseActivity {
                 // TODO: 감정에 따른 유튜브 재생목록 재생
                 Log.d(Const.TAG + activityName, "click youtube");
 
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getPlaylistUrl(fileInfo.getEmotion())));
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getPlaylistUrl()));
                 startActivity(intent);
             }
         });
@@ -150,7 +152,11 @@ public class ResultActivity extends BaseActivity {
         return youtubeUri;
     }
 
-    private String getPlaylistUrl(String emotion) {
+    private String getPlaylistUrl() {
+        return youtubePlaylist + playlistId;
+    }
+
+    private String getPlaylistUrl2(String emotion) {
         String plName = "";
 
         switch (emotion) {

@@ -52,13 +52,15 @@ pyautogui.write(PASSWORD)  # Fill in your PW
 pyautogui.press('enter')
 time.sleep(5)
 
-#재생목록 삭제
 
-file_path = './playlist_url/playlist_id.txt'
+#재생목록 삭제
+file_path = './playlist_url/playlist_id.txt'    #저장했던 재생목록 id 가져오기
 f = open(file_path, 'rt', encoding='UTF-8')
 del_url_list = f.readlines()
 f.close()
 
+
+#유튜브 재생목록 5개 전부 삭제
 for index in range(5):
     driver.get(url='https://www.youtube.com/playlist?list=' + del_url_list[index])
     time.sleep(3)
@@ -68,6 +70,7 @@ for index in range(5):
     driver.find_element_by_xpath('/html/body/ytd-app/ytd-popup-container/tp-yt-paper-dialog/yt-confirm-dialog-renderer/div[2]/div/yt-button-renderer[2]/a/tp-yt-paper-button').send_keys(Keys.ENTER) #삭제 확인 버튼
     time.sleep(5)
 
+
 #playlist_id.txt 삭제
 root_dir = os.path.dirname(os.path.realpath(__file__))
 print(root_dir)
@@ -75,6 +78,7 @@ url_path = root_dir + '\playlist_url\\'
 for url in os.listdir(url_path):
     if os.path.isfile(os.path.join(url_path, url)):
         os.remove(os.path.join(url_path, url))
+
 
 #재생목록 만들고 id 얻기
 driver.get(url='https://studio.youtube.com/channel/UCWXHfwdEQ0mMALIOj0_gDfQ/playlists')
@@ -103,6 +107,7 @@ file_path = './playlist_url/playlist_id.txt'
 f = open(file_path, 'rt', encoding='UTF-8')
 new_url_list = f.readlines()
 f.close()
+
 
 #재생목록에 노래 추가
 for index, emotion in enumerate(emotion_list):

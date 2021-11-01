@@ -13,20 +13,22 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
-def allowed_file(filename):
+# 가능한 파일 확장자 지정
+def allowedFile(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 root_dir = os.path.dirname(os.path.realpath(__file__))
 images_path = root_dir + '/emotional_classification_gray_gpu/input_images/'
 
+# 클라이언트가 보내준 이미지 삭제
 def deleteInputImage():
     for input_image in os.listdir(images_path):
         if os.path.isfile(os.path.join(images_path, input_image)):
             os.remove(os.path.join(images_path, input_image))
 
-
-def show_music(emotion):
+# 받은 emotion에 맞는 음악 list 보여주기
+def showMusic(emotion):
     f = open('music_classification/output_top100/' + emotion + '.txt', mode='r', encoding='utf-8')
     music_list = []
     count_music = 0
@@ -39,12 +41,12 @@ def show_music(emotion):
     f.close()
     return [count_music, music_list]
 
+#미리보기로 보여줄 2개 음악 랜덤설정
 def makeRandNum(count_music):
-
     random_number = random.sample(range(1, count_music), 2)
-
     return random_number
 
+#감정 별 해당 유튜브 id 얻기
 def getId(index):
     f = open('youtube/playlist_url/playlist_id.txt', mode='r')
     id_list = []
@@ -53,15 +55,14 @@ def getId(index):
     f.close()
     return id_list[index]
 
-
+# 서버 켜기
 @app.route('/', methods=['POST'])
 def fileUpload():
 
     if request.method == "POST":
         file = request.files['file']
         #file = request.files.get('file')
-        if file and allowed_file(file.filename):
-
+        if file and allowedFile(file.filename):
             filename = file.filename
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             fileType = '.' + filename.rsplit('.', 1)[1]
@@ -70,7 +71,7 @@ def fileUpload():
             if emotion == None:
                 return "NULL"
             else:
-                info_list = show_music(emotion)
+                info_list = showMusic(emotion)
                 music_list = info_list[1]
                 count_music = info_list[0]
                 num1, num2 = makeRandNum(count_music)

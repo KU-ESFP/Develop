@@ -11,7 +11,7 @@ options.add_argument("disable-gpu") #그래픽 성능 낮춰서 크롤링 성능
 options.add_argument("lang=ko_KR") # 사이트 주언어
 driver = webdriver.Chrome(ChromeDriverManager().install(),chrome_options=options)
 
-
+#찾으려는 음악 정보 가져오기(android에게 전해줄 response)
 def search_music(search_name):
     youtubeUrl = (f"https://www.youtube.com/results?search_query={search_name}")
     driver.get(youtubeUrl)
@@ -30,6 +30,7 @@ def search_music(search_name):
             'thumbnail': img}
     return music
 
+# 감정 별로 분류하기 위한 유튜브 음악 url 가져오기
 def search_url(search_name):
     search_name = '[MV] ' + search_name
     youtubeUrl = (f"https://www.youtube.com/results?search_query={search_name}")
@@ -41,4 +42,3 @@ def search_url(search_name):
     title = box.find_element_by_css_selector('#video-title')
     link = title.get_attribute("href")
     return link
-

@@ -192,7 +192,7 @@ for e in range(1, EPOCHS+1):
     if not best_val_loss or val_loss < best_val_loss:
         if not os.path.isdir("../trained_models"):
             os.makedirs("../trained_models")
-        torch.save(model.state_dict(), '../trained_models/txt_classification_02.pth')
+        torch.save(model.state_dict(), '../trained_models/music_models/txt_classification_02.pth')
         best_val_loss = val_loss
 
 model.load_state_dict(torch.load('../trained_models/txt_classification_02.pth'))

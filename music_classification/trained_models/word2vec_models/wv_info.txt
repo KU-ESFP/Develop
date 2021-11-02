@@ -1,0 +1,11 @@
+w2_sad_10.model
+w2_sad_11.model
+     min_count=1, vector_size=150, epochs=10, sg=0, batch_words=2048, window=5
+
+w2_sad_12.model
+    min_count=1, vector_size=150, epochs=10, sg=0, batch_words=4096, window=5
+
+=========================================================================================
+
+w2v_happy_01.model
+    min_count=1, vector_size=150, epochs=10, sg=0, batch_words=2048, window=5

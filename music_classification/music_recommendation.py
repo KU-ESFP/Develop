@@ -48,7 +48,7 @@ n_classes = 4
 
 print("cpu와 cuda 중 다음 기기로 학습함:", DEVICE)
 model = GRU(1, 256, vocab_size, 128, n_classes, 0.5).to(DEVICE)
-path = './trained_models/txt_classification_02.pth'
+path = 'trained_models/music_models/txt_classification_02.pth'
 model.load_state_dict(torch.load(path))
 model.eval()
 

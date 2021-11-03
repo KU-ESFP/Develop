@@ -84,9 +84,14 @@ Server/emotional_classification_gray_gpu/trained_models/
 Server/music_classification/input_top100/
 Server/music_classification/output_top100/
 Server/music_classification/trained_models/
+Server/music_classification/csv_datasets/
 Server/95/
 Server/youtube/94/
-Server/youtube/95/
+Server/youtube/95/ku.esfp@gmail.com
+kuesfp2021
+ku.esfp@gmail.com
+kuesfp2021
+
 Server/youtube/output_url/
 Server/youtube/playlist_url/
 Server/youtube/private_key.py

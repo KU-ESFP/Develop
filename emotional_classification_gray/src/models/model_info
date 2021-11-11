@@ -1,0 +1,208 @@
+EmoModel
+    [Emo_1]
+    # parameters
+    batch_size = 32
+    learning_rate = 0.001
+    n_epoch = 30
+
+    # datasets
+    clean_datasets_v3
+
+    [결과]
+    Accuracy for class angry is: 75.2 %
+    Accuracy for class happy is: 83.2 %
+    Accuracy for class neutral is: 79.9 %
+    Accuracy for class sad   is: 76.7 %
+    Accuracy for class surprised is: 93.6 %
+
+===================================================================
+
+CNN4 [77-79]
+    [CNN1_04]
+    # parameters
+    batch_size = 32
+    learning_rate = 0.001
+    n_epoch = 80
+
+    # datasets
+    clean_datasets_v2
+
+    [결과]
+    Accuracy for class angry is: 76.4 %
+    Accuracy for class happy is: 82.8 %
+    Accuracy for class neutral is: 77.2 %
+    Accuracy for class sad   is: 73.1 %
+    Accuracy for class surprised is: 90.3 %
+
+===================================================================
+
+CNN5
+    [CNN1_05]
+    # parameters
+    batch_size = 32
+    learning_rate = 0.001
+    n_epoch = 50
+
+    # datasets
+    clean_datasets_v2
+
+    [결과]
+    Accuracy for class angry is: 75.9 %
+    Accuracy for class happy is: 81.6 %
+    Accuracy for class neutral is: 82.3 %
+    Accuracy for class sad   is: 71.3 %
+    Accuracy for class surprised is: 91.2 %
+
+===================================================================
+
+CNN6
+    [CNN1_06_1]
+    # parameters
+    batch_size = 32
+    learning_rate = 0.001
+    n_epoch = 30
+
+    # datasets
+    clean_datasets_v2
+
+    [결과]
+    Accuracy for class angry is: 75.4 %
+    Accuracy for class happy is: 84.3 %
+    Accuracy for class neutral is: 76.7 %
+    Accuracy for class sad   is: 76.4 %
+    Accuracy for class surprised is: 93.6 %
+
+    * epoch 올릴수록 성능 거지
+
+===================================================================
+
+CNN7 [BEST]
+    [CNN1_07_1]
+    # parameters
+    batch_size = 32
+    learning_rate = 0.001
+    n_epoch = 30
+
+    # datasets
+    clean_datasets_v2
+
+    [결과]
+    Accuracy for class angry is: 80.1 %
+    Accuracy for class happy is: 84.7 %
+    Accuracy for class neutral is: 76.0 %
+    Accuracy for class sad   is: 81.6 %
+    Accuracy for class surprised is: 94.3 %
+
+    [필요한 데이터셋]
+    - 웃는거에 입 벌리면서 웃는거
+    - 웃는거에 수염있는 남자 웃는거 넣어야하고
+    - 대체적으로 수염있는애들 넣자
+    - sad 눈 깔고 있는거 좀 더 넣기
+
+    -----------------------------------------------
+
+    [CNN1_07_2]
+    # parameters
+    batch_size = 32
+    learning_rate = 0.001
+    n_epoch = 30
+
+    # datasets
+    clean_datasets_v3
+
+    [결과]
+    Accuracy for class angry is: 80.6 %
+    Accuracy for class happy is: 86.8 %
+    Accuracy for class neutral is: 73.3 %
+    Accuracy for class sad   is: 82.5 %
+    Accuracy for class surprised is: 91.2 %
+
+    -----------------------------------------------
+
+    [CNN7_02]
+    # parameters
+    batch_size = 32
+    learning_rate = 0.001
+    n_epoch = 80
+
+    # datasets
+    clean_datasets_v4
+
+    Accuracy for class angry is: 86.6 %
+    Accuracy for class happy is: 86.0 %
+    Accuracy for class neutral is: 81.7 %
+    Accuracy for class sad   is: 77.5 %
+    Accuracy for class surprised is: 94.8 %
+
+===================================================================
+
+CNN8
+    [CNN1_08_1]
+    # parameters
+    batch_size = 32
+    learning_rate = 0.001
+    n_epoch = 35
+
+    # datasets
+    clean_datasets_v2
+
+    [결과]
+    Accuracy for class angry is: 80.4 %
+    Accuracy for class happy is: 82.3 %
+    Accuracy for class neutral is: 76.7 %
+    Accuracy for class sad   is: 80.7 %
+    Accuracy for class surprised is: 90.5 %
+
+    -----------------------------------------------
+
+    [CNN1_08_2]
+    # parameters
+    batch_size = 32
+    learning_rate = 0.001
+    n_epoch = 35
+    # dropout1 => 0.3으로 교체
+
+    # datasets
+    clean_datasets_v2
+
+    [결과]
+    Accuracy for class angry is: 87.3 %
+    Accuracy for class happy is: 86.2 %
+    Accuracy for class neutral is: 82.0 %
+    Accuracy for class sad   is: 72.5 %
+    Accuracy for class surprised is: 88.6 %
+
+    -----------------------------------------------
+
+    [CNN1_08_3]
+    # parameters
+    batch_size = 32
+    learning_rate = 0.001
+    n_epoch = 35
+
+    # datasets
+    clean_datasets_v3
+
+    [결과]
+    Accuracy for class angry is: 80.9 %
+    Accuracy for class happy is: 88.0 %
+    Accuracy for class neutral is: 77.9 %
+    Accuracy for class sad   is: 74.0 %
+    Accuracy for class surprised is: 91.9 %
+
+    -----------------------------------------------
+
+    [CNN8_02]
+    # parameters
+    batch_size = 32
+    learning_rate = 0.001
+    n_epoch = 35
+
+    # datasets
+    clean_datasets_v4
+
+    Accuracy for class angry is: 81.9 %
+    Accuracy for class happy is: 82.3 %
+    Accuracy for class neutral is: 85.7 %
+    Accuracy for class sad   is: 77.5 %
+    Accuracy for class surprised is: 92.7 %

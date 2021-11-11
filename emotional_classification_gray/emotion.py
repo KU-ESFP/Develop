@@ -13,8 +13,9 @@ face_cascade = cv2.CascadeClassifier('./trained_models/detection_models/haarcasc
 # Model load
 classes = ['angry', 'happy', 'neutral', 'sad', 'surprised']
 # emotion_classifier = torch.load(emotion_model_path)
-model = Network(num_classes=5)
-path = "trained_models/emotion_models/new_model_Network_01.pth"
+# model = Network(num_classes=5)
+model = LeNet(num_classes=5)
+path = "trained_models/emotion_models/new_model_LeNet_01.pth"
 model.load_state_dict(torch.load(path))
 model.eval()
 

@@ -10,8 +10,8 @@ genres = genres.split()
     - 한 노래당 총 30초 추출 (3초씩 10개)
 '''
 
-if not os.path.exists('../../content/audio_3_sec'):
-    os.makedirs('../../content/audio_3_sec')
+if not os.path.exists('../../content/train_datasets/audio_3_sec'):
+    os.makedirs('../../content/train_datasets/audio_3_sec')
 
 for g in genres:
     j = 0

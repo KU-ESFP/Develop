@@ -12,7 +12,6 @@ BATCH_SIZE = 64
 lr = 0.001
 EPOCHS = 20
 
-
 USE_CUDA = torch.cuda.is_available()
 DEVICE = torch.device("cuda" if USE_CUDA else "cpu")
 print("cpu와 cuda 중 다음 기기로 학습함:", DEVICE)
@@ -60,7 +59,7 @@ TEXT = Field(sequential=True, use_vocab=True, tokenize=custom_tokenizer, batch_f
 LABEL = Field(sequential=False, use_vocab=False, is_target=True)
 
 # Dataset 만들기
-train_data, test_data = TabularDataset.splits(path='../csv_datasets/', train='train_data.csv', test='test_data.csv',
+train_data, test_data = TabularDataset.splits(path='../csv_datasets/', train='train_data_v1.csv', test='test_data_v1.csv',
                                               format='csv', fields=[('text', TEXT), ('label', LABEL)], skip_header=True)
 
 

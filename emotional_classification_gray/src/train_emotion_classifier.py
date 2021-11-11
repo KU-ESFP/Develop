@@ -1,11 +1,12 @@
 import os
 import torch
 import torch.nn as nn
-
+import time
+from torch import optim
 from torch.optim import Adam
 from torchsummary import summary
 
-from emotional_classification_gray.src.models.model import LeNet, Network
+from emotional_classification_gray.src.models.model import LeNet, Network, EmoModel, CNN1
 from emotional_classification_gray.src.utils.dataset import train_loader, test_loader
 import matplotlib.pyplot as plt
 import warnings
@@ -16,19 +17,21 @@ os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
 # parameters
 batch_size = 32
 learning_rate = 0.001
-n_epoch = 20
+n_epoch = 30
 input_shape = (1, 48, 48)
 num_classes = 5
 
 classes = ['angry', 'happy', 'neutral', 'sad', 'surprised']
 
-save_model_pth = "new_model_LeNet_02.pth"
-load_model_pth = "new_model_LeNet_02.pth"
+save_model_pth = "new_model_CNN1_01.pth"
+load_model_pth = "new_model_CNN1_01.pth"
 
 
 # Instantiate a neural network model
 # model = Network(num_classes)
-model = LeNet(num_classes)
+# model = LeNet(num_classes)
+# model = EmoModel(num_classes)
+model = CNN1(num_classes)
 
 # Define the loss function with Classification Cross-Entropy loss and an optimizer with Adam optimizer
 criterion = nn.CrossEntropyLoss()
@@ -90,11 +93,11 @@ def train(num_epochs):
 
         # ============== 테스트 =============
         if (epoch + 1) % 1 == 0:
-            model.eval()  # 모델을 평가모드로 전환
             test_loss = 0.0                                                     # test loss 초기화
             evaluation = []  # accuracy                                         # 예측 정확 여부 저장할 list
 
             with torch.no_grad():
+                model.eval()                                                    # 모델을 평가모드로 전환
                 for i, data in enumerate(test_loader):                          # 각 batch 마다
                     features, labels = data                                     # 데이터 특징과 라벨로 나누기
                     labels = labels.to(device)
@@ -125,17 +128,20 @@ def train(num_epochs):
 
 
 # Function to test what classes performed well
-def testClasses():
+def classesTest():
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
     # 각 분류(class)에 대한 예측값 계산을 위해 준비
     correct_pred = {classname: 0 for classname in classes}
     total_pred = {classname: 0 for classname in classes}
 
-    # 변화도는 여전히 필요하지 않음
+    # # 변화도는 여전히 필요하지 않음
+    # CPU VERSION
     with torch.no_grad():
+        model.eval()
         for data in test_loader:
             features, labels = data
+
             features = features.to(device)
             outputs = model(features)
             _, predictions = torch.max(outputs, 1)
@@ -151,6 +157,30 @@ def testClasses():
         print("Accuracy for class {:5s} is: {:.1f} %".format(classname, accuracy))
 
 
+    # # GPU VERSION
+    # model.to(device)
+    # with torch.no_grad():
+    #     model.eval()  # 모델을 평가모드로 전환
+    #     for i, data in enumerate(test_loader):  # 각 batch 마다
+    #         features, labels = data  # 데이터 특징과 라벨로 나누기
+    #         labels = labels.to(device)
+    #         features = features.to(device)
+    #
+    #         outputs = model(features)
+    #
+    #         _, predicted = torch.max(outputs, 1)
+    #
+    #         for label, prediction in zip(labels, predicted):
+    #             if label == prediction:
+    #                 correct_pred[classes[label]] += 1
+    #             total_pred[classes[label]] += 1
+    #
+    # # 각 분류별 정확도(accuracy)를 출력합니다
+    # for classname, correct_count in correct_pred.items():
+    #     accuracy = 100 * float(correct_count) / total_pred[classname]
+    #     print("Accuracy for class {:5s} is: {:.1f} %".format(classname, accuracy))
+
+
 if __name__ == "__main__":
     # Let's build our model
     train(n_epoch)
@@ -160,11 +190,13 @@ if __name__ == "__main__":
     # testModelAccuracy()
 
     # Let's load the model we just created and test the accuracy per label
-    model = LeNet(num_classes)
     # model = Network(num_classes)
+    # model = LeNet(num_classes)
+    # model = EmoModel(num_classes)
+    model = CNN1(num_classes)
     model.load_state_dict(torch.load("../trained_models/emotion_models/" + load_model_pth))
 
-    testClasses()
+    classesTest()
 
     # ==================================
     # === 학습/테스트, loss/정확도 시각화 ===

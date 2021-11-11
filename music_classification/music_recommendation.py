@@ -57,10 +57,10 @@ model.eval()
     멜론 TOP100 곡 감정 예측 알고리즘
 '''
 # path name
-top100_path = 'input_top100'
-# top100_path = 'input_test'
-save_path = './csv_datasets/'
-input_dataset = 'input_test_data.csv'
+# top100_path = 'input_top100'
+top100_path = 'input_test'
+# save_path = './csv_datasets/'
+# input_dataset = 'input_test_data.csv'
 
 
 # 데이터
@@ -75,7 +75,7 @@ classes = ['angry', 'happy', 'neutral', 'sad']
     - 기능: input_top100 폴더에 1-100 순위의 노래 update
     - 특이사항: 하루에 한 번만 실행 (오전 12시)
 '''
-exec(open('src/crawlings/input_crawling.py', encoding='utf8').read())
+# exec(open('src/crawlings/input_crawling.py', encoding='utf8').read())
 
 
 ''' 
@@ -84,7 +84,7 @@ exec(open('src/crawlings/input_crawling.py', encoding='utf8').read())
     - surprised: 1-100개의 노래 중 랜덤으로 7개 노래 추천
 '''
 # 이전 output_top100 데이터 지워주기
-deleteOutputSong()
+# deleteOutputSong()
 
 # top100 정보를 담은 리스트
 list_top100 = []
@@ -98,6 +98,7 @@ for song_info in os.listdir(top100_path):
         if not song:
             continue
         line = kkma.sentences(song)
+        # print(line)
 
         # 1. Field 정의
         TEXT = Field(sequential=True, use_vocab=True, tokenize=custom_tokenizer, batch_first=True)
@@ -106,7 +107,7 @@ for song_info in os.listdir(top100_path):
         # 2. torchtext.data.Example 생성
         sequences = []
         for s in line:
-            # print(s)
+            print(s)
             sequences.append(Example.fromlist([s], fields))
 
         # 3. Dataset생성 (word data)
@@ -130,19 +131,30 @@ for song_info in os.listdir(top100_path):
             logit = model(x)
             # print(logit.data)
             # print('logit_max', logit.max(1))
-            # print('predict', logit.max(1)[1])
+            print('predict', logit.max(1)[1])
             for emotion_idx in logit.max(1)[1]:
                 # print('emotion_idx', emotion_idx)
                 classes_dic[classes[emotion_idx]] += 1
                 # print('classes_dix', classes_dic[classes[emotion_idx]])
-        # print(classes_dic)  # {'angry': 0, 'happy': 3, 'neutral': 7, 'sad': 3} -> Result is neutral
-        best_emotion = max(classes_dic.items(), key=operator.itemgetter(1))[0]
+        print(classes_dic)  # {'angry': 0, 'happy': 3, 'neutral': 7, 'sad': 3} -> Result is neutral
+        #best_emotion = max(classes_dic.items(), key=operator.itemgetter(1))[0]
+        classes_dic_tmp = {key:value for key, value in classes_dic.items() if key != "neutral"}   #neutral 제외
+        best_value = max(classes_dic_tmp.items(), key=operator.itemgetter(1))[1]
+        if best_value >= 4:
+            best_emotion = max(classes_dic_tmp.items(), key=operator.itemgetter(1))[0]
+        else:
+            best_emotion = "neutral"
+        print(best_emotion)
         print('SONG NAME: {}, EMOTION: {}'.format(song_info.rstrip('.txt'), best_emotion))
-        saveOutputSong(song_info.rstrip('.txt'), best_emotion)    # new top100 info
-        fread.close()
+        # saveOutputSong(song_info.rstrip('.txt'), best_emotion)    # new top100 info
+        # # print(classes_dic)  # {'angry': 0, 'happy': 3, 'neutral': 7, 'sad': 3} -> Result is neutral
+        # best_emotion = max(classes_dic.items(), key=operator.itemgetter(1))[0]
+        # print('SONG NAME: {}, EMOTION: {}'.format(song_info.rstrip('.txt'), best_emotion))
+        # saveOutputSong(song_info.rstrip('.txt'), best_emotion)    # new top100 info
+        # fread.close()
 
 
 # 감정이 surprise 일 때는 top1-100 중 7곡 랜덤으로 구해주기
-list_surprised = random.sample(list_top100, 7)
-for data in list_surprised:
-    saveOutputSong(data.rstrip('.txt'), 'surprised')
+# list_surprised = random.sample(list_top100, 7)
+# for data in list_surprised:
+#     saveOutputSong(data.rstrip('.txt'), 'surprised')

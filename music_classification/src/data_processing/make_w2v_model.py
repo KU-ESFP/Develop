@@ -7,7 +7,7 @@ from konlpy.tag import Kkma
 # 데이터 전처리
 kkma = Kkma()
 
-song_path = '../../song_datasets/happy_songs'
+song_path = '../../song_datasets/neutral_songs'
 # song_path = 'input_test'
 
 # 노래 한 곡 단위로 수집한 노래 가사의 단어를 불러와 리스트 형태로 구현하기 위해 아래와 같이 토큰화 진행
@@ -42,6 +42,5 @@ for index in range(len(tagging_kkma)):
 # print('tagging data', tagging_data)
 print('The total number of samples: {}'.format(len(tagging_data)))
 
-model = Word2Vec(tagging_data, min_count=1, vector_size=150, epochs=10, sg=0, batch_words=2048, window=5)
-# model.save('./word2vec_models/w2v_sad_10.model')
-model.save('../../trained_models/word2vec_models/w2v_happy_01.model')
+model = Word2Vec(tagging_data, min_count=1, vector_size=150, epochs=10, sg=0, batch_words=1000, window=7)
+model.save('../../trained_models/word2vec_models/w2v_neutral_01.model')

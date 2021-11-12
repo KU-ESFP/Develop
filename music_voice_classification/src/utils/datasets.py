@@ -41,32 +41,6 @@ class MusicDataset(Dataset):
         # print(audio.shape, sr)                      # torch.Size([2, 132300]) 44100: [채널 수, 데이터 길이], sampling rate
         # print(audio.shape[1] / sr)                  # 음성 파일 시간: 3초
 
-        # if sr != 48000:                                 # sampling rate를 48000으로 통일
-        #     # print(audio.shape)
-        #     transform = transforms.Resample(sr, 48000)
-        #     audio = transform(audio)                     # (1, 144000)
-        #
-        # if audio.shape[0] != 2:
-        #     zero = torch.zeros_like(audio)               # (1, 144000)
-        #     audio = torch.stack([audio, zero])           # (2, 1, 144000)
-        #     audio = audio.squeeze(1)                     # (2, 144000)
-
-        # print(audio.view([-1, 2]).shape)
-        # audio = audio.view([-1, 2])             # (72000, 2)
-        # audio = torch.transpose(audio, 0, 1)    # (2, 72000)
-        # audio = audio.view([-1, 2])
-        # audio = torch.transpose(audio, 0, 1)
-        # print('change', audio.shape)
-        # if audio.shape[1] == 132300:                         # channel을 2로 통일
-        #     # print(audio.view([-1, 2]).shape)            # torch.Size([66150, 2])
-        #     audio = audio.view([-1, 2]).shape
-        # elif audio.shape[1] == 14400:
-        #     # print(audio.view([-1, 2]).shape)            # torch.Size([72000, 2])
-        #     audio = audio.view([-1, 2]).shape
-
-        if sr != 48000:
-            transform = transforms.Resample(sr, 48000)
-            audio = transform(audio)
         class_idx = self.classes.index(parse_genres(fname))                 # class_idx 0 or 1
         return audio, class_idx
 

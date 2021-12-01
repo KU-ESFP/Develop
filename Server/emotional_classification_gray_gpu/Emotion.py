@@ -4,7 +4,7 @@ import torchvision.transforms as transforms
 import numpy as np
 
 from PIL import Image
-from emotional_classification_gray_gpu.src.models.model import LeNet, CNN7
+from Server.emotional_classification_gray_gpu.src.models.model import CNN7
 
 
 def runEmotion(filename):
@@ -15,7 +15,7 @@ def runEmotion(filename):
 
     # Model load
     classes = ['angry', 'happy', 'neutral', 'sad', 'surprised']
-    # emotion_classifier = torch.load(emotion_model_path)
+
     model = CNN7(num_classes=5)
     path = 'emotional_classification_gray_gpu/trained_models/emotion_models/acc_new_model_CNN7_result.pth'
     model.load_state_dict(torch.load(path))
@@ -25,7 +25,7 @@ def runEmotion(filename):
     # 한글 경로 설정 문제 해결
     img_array = np.fromfile('emotional_classification_gray_gpu/input_images/' + filename, np.uint8)
     img = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
-    #img = cv2.imread('emotional_classification_gray_gpu/input_images/' + filename)
+
 
     if img is None:
         print('[ERROR] IMAGE IS NONE')
@@ -56,11 +56,10 @@ def runEmotion(filename):
 
         img_pil_face = Image.fromarray(face_boundary)
         img_trans = transform(img_pil_face)
-        img_trans = img_trans.unsqueeze(0)                      # Add batch dimension
+        img_trans = img_trans.unsqueeze(0)
 
-        output = model(img_trans)                               # Forward pass
-        pred = torch.argmax(output, 1)                          # Get predicted class if multi-class classification
-        #print('Image predicted as ', classes[pred])      # Output: Emotion class for the face
+        output = model(img_trans)
+        pred = torch.argmax(output, 1)
         list_face_detected.append(classes[pred])
 
         cv2.putText(img, classes[pred], (x - 10, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2, cv2.LINE_AA)
@@ -76,9 +75,6 @@ def runEmotion(filename):
         print('[ERROR] A LOT OF FACES ARE DETECTED')
         return "NULL"
 
-    #cv2.imshow('detect', img)
-    #cv2.waitKey(0)
-    #cv2.destroyAllWindows()
 
 
 

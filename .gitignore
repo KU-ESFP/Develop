@@ -81,6 +81,7 @@ Status
 
 Server/music_classification/input_top100/
 Server/music_classification/output_top100/
+Server/music_classification/trained_models/
 Server/music_classification/src/data_processing/w2v_emotion_words/
 Server/95/
 Server/.idea/
@@ -93,10 +94,11 @@ Server/youtube/private_key.py
 
 Server/emotional_classification_gray_gpu/clean_datasets/
 Server/emotional_classification_gray_gpu/input_images/
-Server/emotional_classification_gray_gpu/trained_models/detection_models/
+Server/emotional_classification_gray_gpu/trained_models/
 
 
 Server/music_voice_classification/content/
+Server/music_voice_classification/trained_models/
 
 
 

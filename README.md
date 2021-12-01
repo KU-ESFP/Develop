@@ -1,2 +1,29 @@
 # Develop
-실제 구현 코드 레포
+- Android Programming (JAVA)
+
+## Packages
+- **activity**
+  - BaseActivity
+  - LauncherActivity
+  - SurveyActivity
+  - MainActivity
+  - AnalaysisActivity
+  - ResultActivity
+- **utils**
+  - BFunction
+  - Const
+  - NetUtil
+  - PopupUtil
+  - ToastUtil
+- **network**
+  - NetworkManager
+  - ResEmotion
+
+## About
+- Android Stuido 4.1.1
+- SQLite
+- dependency
+  - glide 4.12.0
+  - OkHttp3 4.9.0
+  - Retrofit2 2.3.0
+  - gson 2.8.0

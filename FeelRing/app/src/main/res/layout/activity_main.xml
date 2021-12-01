@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="8dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/iv_photo"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:layout_margin="20dp"
+                    android:src="@android:drawable/ic_menu_camera" />
+
+                <Button
+                    android:id="@+id/bt_pic"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="사진 선택" />
+
+                <Button
+                    android:id="@+id/bt_edit_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="이름 수정" />
+
+                <Button
+                    android:id="@+id/bt_ok"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="분석 시작"
+                    android:enabled="false"/>
+
+            </LinearLayout>
+        </FrameLayout>
+
+    </FrameLayout>
+
+</LinearLayout>

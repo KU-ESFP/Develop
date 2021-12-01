@@ -1,0 +1,42 @@
+<resources>
+    <string name="app_name">FeelRing</string>
+
+    <!-- url  -->
+    <string name="server_ip">203.252.166.75</string>
+    <string name="test_url">http://203.252.166.75:8080/api/test</string>
+    <string name="upload_file_url">http://203.252.166.75:8000/</string>
+
+    <string name="youtube_basic">https://www.youtube.com/watch?v=</string>
+    <string name="youtube_playlist">https://www.youtube.com/playlist?list=</string>
+    <string name="pl_test">PL0ZFmU0U5awl8kWyqNXzTadjSgx7cm3fl</string>
+    <string name="pl_happy">PL0ZFmU0U5awl1Dnw9N7IYM4LnipcNeQC5</string>
+    <string name="pl_sad">PL0ZFmU0U5awnihH1WlzhUaMxb5087uLN1</string>
+    <string name="pl_surprise">PL0ZFmU0U5awkTAmznnrT8uCxZ8bybTVth</string>
+    <string name="pl_angry">PL0ZFmU0U5awkD1j8qHmdJ7RDv3ciSndoq</string>
+    <string name="pl_neutral">PL0ZFmU0U5awmBHOsI2aiQnvE4Bj6eiwmm</string>
+
+    <!--    -->
+    <string name="network_not_connected">인터넷이 연결되지 않았습니다.</string>
+    <string name="set_name">이름을 입력해주세요 (최대 5글자)</string>
+    <string name="dialog_ok">확인</string>
+    <string name="dialog_cancel">취소</string>
+    <string name="nickname_not_exist">닉네임을 입력해주세요</string>
+    <string name="touch_one_backpress">한 번 더 누르시면 종료됩니다.</string>
+    <string name="check_permission">카메라 권한 승인이 필요합니다.</string>
+    <string name="fail_request">분석에 실패했습니다. 다시 시도해주세요.</string>
+    <string name="no_back">분석 중에 뒤로 갈 수 없습니다.</string>
+    <string name="recomment_music">추천하는 음악은</string>
+
+    <!-- -->
+    <string name="question_music">더 많은 음악을 듣고 싶다면</string>
+    <string name="go_youtube">유튜브 재생목록 바로 가기</string>
+    <string name="your_feeling"> 님의 감정은</string>
+    <string name="is_emotion">이네요!</string>
+    <string name="question_replay">다시 하고 싶다면</string>
+    <string name="go_home">홈으로</string>
+
+
+
+
+
+</resources>

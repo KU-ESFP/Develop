@@ -6,8 +6,13 @@ old_csv_datasets
 input_test
 input_top100
 output_top100
+song_datasets
 
 # datasets
 song_datasets
+
+# train model
+trained_models
+
 
 

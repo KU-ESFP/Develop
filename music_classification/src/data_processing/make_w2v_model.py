@@ -7,6 +7,7 @@ from konlpy.tag import Kkma
 # 데이터 전처리
 kkma = Kkma()
 
+#song_path = '../../song_datasets/angry_songs'
 song_path = '../../song_datasets/neutral_songs'
 # song_path = 'input_test'
 
@@ -33,7 +34,8 @@ for index in range(len(tagging_kkma)):
             stopwords.append(word)
 # print("stopwords", stopwords)
 
-# 태깅한 데이터들을 담은 변수
+# 태깅한 데이터들을 담은 변수m
+
 tagging = []
 tagging_data = []
 for index in range(len(tagging_kkma)):
@@ -42,5 +44,8 @@ for index in range(len(tagging_kkma)):
 # print('tagging data', tagging_data)
 print('The total number of samples: {}'.format(len(tagging_data)))
 
-model = Word2Vec(tagging_data, min_count=1, vector_size=150, epochs=10, sg=0, batch_words=1000, window=7)
-model.save('../../trained_models/word2vec_models/w2v_neutral_01.model')
+model = Word2Vec(tagging_data, min_count=1, vector_size=150, epochs=10, sg=0, batch_words=2048, window=5)
+# model.save('./word2vec_models/w2v_sad_10.model')
+#model.save('../../trained_models/word2vec_models/w2v_happy_01.model')
+#model.save('../../trained_models/word2vec_models/w2v_angry_03.model')
+model.save('../../trained_models/word2vec_models/w2v_neutral_03.model')

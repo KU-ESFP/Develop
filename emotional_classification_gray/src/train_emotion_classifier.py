@@ -6,7 +6,7 @@ from torch import optim
 from torch.optim import Adam
 from torchsummary import summary
 
-from emotional_classification_gray.src.models.model import LeNet, Network, EmoModel, CNN1
+from emotional_classification_gray.src.models.model import CNN7
 from emotional_classification_gray.src.utils.dataset import train_loader, test_loader
 import matplotlib.pyplot as plt
 import warnings
@@ -23,15 +23,13 @@ num_classes = 5
 
 classes = ['angry', 'happy', 'neutral', 'sad', 'surprised']
 
-save_model_pth = "new_model_CNN1_01.pth"
-load_model_pth = "new_model_CNN1_01.pth"
+save_model_pth = "new_model_CNN7_result.pth"
+load_acc_model_pth = "acc_new_model_CNN7_result.pth"
+load_loss_model_pth = "loss_new_model_CNN7_result.pth"
 
 
 # Instantiate a neural network model
-# model = Network(num_classes)
-# model = LeNet(num_classes)
-# model = EmoModel(num_classes)
-model = CNN1(num_classes)
+model = CNN7(num_classes)
 
 # Define the loss function with Classification Cross-Entropy loss and an optimizer with Adam optimizer
 criterion = nn.CrossEntropyLoss()
@@ -186,16 +184,14 @@ if __name__ == "__main__":
     train(n_epoch)
     print('Finished Training')
 
-    # Test which classes performed well
-    # testModelAccuracy()
+    model = CNN7(num_classes)
 
-    # Let's load the model we just created and test the accuracy per label
-    # model = Network(num_classes)
-    # model = LeNet(num_classes)
-    # model = EmoModel(num_classes)
-    model = CNN1(num_classes)
-    model.load_state_dict(torch.load("../trained_models/emotion_models/" + load_model_pth))
+    print("=======================================================")
+    model.load_state_dict(torch.load("../trained_models/emotion_models/" + load_acc_model_pth))
+    classesTest()
 
+    print("=======================================================")
+    model.load_state_dict(torch.load("../trained_models/emotion_models/" + load_loss_model_pth))
     classesTest()
 
     # ==================================
@@ -208,46 +204,3 @@ if __name__ == "__main__":
     plt.plot(range(len(test_accs)), test_accs, label='test acc')
     plt.legend()
     plt.show()
-
-
-# for batch_idx, (inputs, targets) in enumerate(train_set):
-#     print(inputs.shape)   # (batch_size, c, h, w)
-#     tmp_data = inputs.numpy().transpose(0, 2, 3, 1)
-#     img = tmp_data[0]
-#     plt.imshow(img)
-#     plt.show()
-#     break
-
-# data_iter = iter(train_set)
-# train, label = data_iter.next()
-# print(train.shape)                              # torch.Size([32, 1, 48, 48]) : (batch_size, channel, h, w)
-#
-# train_t = np.transpose(train, (0, 2, 3, 1))     # torch.Size([32, 48, 48, 1]) : (batch_size, w, h, channel) - Matplotlib로 시각화하기 위해서
-# print(train_t.shape)
-#
-# one_image, label = data_train[0]
-# print("type of one image", type(one_image))
-# print("size of one image : ", one_image.shape)
-# plt.imshow(one_image.squeeze().numpy(), cmap='gray')    # squeeze()함수: 차원 중 사이즈가 1인 것을 찾아 해당 차원 제거
-# print("type of label : ", type(label))
-# print("label : ", label)
-# plt.show()
-
-# PyTorch의 경우 [Batch Size, Channel, Width, Height]의 구조를 가지고 있어서, 이를 matplotlib로 출력하기 위해서는 [Width, Height, Channel]의 순서로 변경해주어야 한다.
-# def custom_imshow(img):
-#     img = img.numpy()
-#     plt.imshow(np.transpose(img, (1, 2, 0)))
-#     plt.show()
-#
-#
-# def process():
-#     for batch_idx, (inputs, targets) in enumerate(train_set):
-#         custom_imshow(inputs[0])
-#
-# process()
-
-# for i in range(1, 16+1):
-#     plt.subplot(4, 4, i)
-#     plt.imshow(np.transpose(data_train[0][0], (1, 2, 0)), cmap='Greys_r')
-#     plt.axis('off')
-# plt.show()

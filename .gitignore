@@ -84,6 +84,7 @@ Server/music_classification/output_top100/
 Server/music_classification/trained_models/
 Server/music_classification/csv_datasets/
 Server/95/
+Server/.idea/
 
 
 Server/youtube/95/
@@ -99,7 +100,7 @@ Server/emotional_classification_gray_gpu/src/models/model_info.txt
 
 Server/music_voice_classification/content/
 Server/music_voice_classification/trained_models/
-.idea/
+
 
 
 

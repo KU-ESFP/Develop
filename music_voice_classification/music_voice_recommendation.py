@@ -3,17 +3,18 @@ import csv
 import torch
 import torchaudio
 import operator
+import random
 import pandas as pd
 
 from konlpy.tag import Kkma
 from pydub import AudioSegment
 from music_voice_classification.src.models.model import DEVICE
-from music_voice_classification.src.models.model import multitemporalfeturemap
+from music_voice_classification.src.models.model import MusicCNN
 
 
 # model
 classes = ['slow', 'fast']
-model = multitemporalfeturemap(2, 2).to(DEVICE)  # channel, classes num
+model = MusicCNN(2, 2).to(DEVICE)  # channel, classes num
 
 # path name
 model_genre_path = 'music_genre_02.pth'
@@ -87,6 +88,14 @@ df.to_csv('./content/top100/' + top100_best_genre, index=False, mode='w', encodi
 '''
     classification using a word dictionary
 '''
+
+def saveOutputSong(song_info, emotion):
+    output_path = "./content/top100/txt_top100_output"
+    f = open(os.path.join(output_path, emotion + '.txt'), 'a', encoding='UTF8')
+    f.write(song_info + '\n')
+    f.close()
+
+
 kkma = Kkma()
 top100_input_txt_path = './content/top100/txt_top100_input'
 fast_genres = 'happy angry'
@@ -94,12 +103,16 @@ fast_genres = fast_genres.split()
 slow_genres = 'neutral sad'
 slow_genres = slow_genres.split()
 
+# top100 정보를 담은 리스트
+list_top100 = []
+
 
 with open('./content/top100/' + top100_best_genre, 'r', encoding='utf8') as f:
     reader = csv.reader(f)
     header = next(reader)       # header omitted
 
     for song_name, genre in reader:
+        list_top100.append(song_name)
         print(song_name + ": ", genre)
 
         fread = open(os.path.join(top100_input_txt_path, song_name + '.txt'), 'r', encoding='utf-8')   # load song txt
@@ -110,7 +123,7 @@ with open('./content/top100/' + top100_best_genre, 'r', encoding='utf8') as f:
             fast_dic = {'happy': 0, 'angry': 0}
 
             for ll in line:
-                # print("[" + ll + "]")
+                print("[" + ll + "]")
                 data_morphs = kkma.morphs(ll)
 
                 for ff in fast_genres:
@@ -122,7 +135,7 @@ with open('./content/top100/' + top100_best_genre, 'r', encoding='utf8') as f:
                         for dt in range(len(data_morphs)):
                             if word == data_morphs[dt]:
                                 is_word = 1
-                                # print(ff, word, ": ", ll)
+                                print(ff, word, ": ", ll)
                                 break
 
                         if is_word:
@@ -134,6 +147,7 @@ with open('./content/top100/' + top100_best_genre, 'r', encoding='utf8') as f:
 
             fast_best_genre = max(fast_dic.items(), key=operator.itemgetter(1))[0]
             print(song_name + ": ", fast_best_genre)
+            saveOutputSong(song_name, fast_best_genre)  # new top100 info
             print(fast_dic)
             print()
 
@@ -141,7 +155,7 @@ with open('./content/top100/' + top100_best_genre, 'r', encoding='utf8') as f:
             slow_dic = {'neutral': 0, 'sad': 0}
 
             for ll in line:
-                # print("[" + ll + "]")
+                print("[" + ll + "]")
                 data_morphs = kkma.morphs(ll)
 
                 for ff in slow_genres:
@@ -153,7 +167,7 @@ with open('./content/top100/' + top100_best_genre, 'r', encoding='utf8') as f:
                         for dt in range(len(data_morphs)):
                             if word == data_morphs[dt]:
                                 is_word = 1
-                                # print(ff, word, ": ", ll)
+                                print(ff, word, ": ", ll)
                                 break
 
                         if is_word:
@@ -165,5 +179,12 @@ with open('./content/top100/' + top100_best_genre, 'r', encoding='utf8') as f:
 
             slow_best_genre = max(slow_dic.items(), key=operator.itemgetter(1))[0]
             print(song_name + ": ", slow_best_genre)
+            saveOutputSong(song_name, slow_best_genre)  # new top100 info
             print(slow_dic)
             print()
+
+
+# 감정이 surprise 일 때는 top1-100 중 18곡 랜덤으로 구해주기
+list_surprised = random.sample(list_top100, 18)
+for data in list_surprised:
+    saveOutputSong(data.rstrip('.txt'), 'surprised')

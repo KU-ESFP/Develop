@@ -17,7 +17,7 @@ for g in genres:
     j = 0
     print(f"{g}")
 
-    for filename in os.listdir(os.path.join('../../content/audio_compress', f"{g}")):                 # 여기에 기존 장르별 본래 노래(wav) 저장
+    for filename in os.listdir(os.path.join('../../content/audio_compress', f"{g}")):                    # 여기에 기존 장르별 본래 노래(wav) 저장
         song = os.path.join(f'../../content/audio_compress/{g}', f'{filename}')
         j = j + 1
 
@@ -43,7 +43,7 @@ for g in genres:
 #     j = 0
 #     print(f"{g}")
 #
-#     for filename in os.listdir(os.path.join('../../content/audio_origin_sec', f"{g}")):                            # 여기에 기존 장르별 본래 노래(wav) 저장
+#     for filename in os.listdir(os.path.join('../../content/audio_origin_sec', f"{g}")):                      # 여기에 기존 장르별 본래 노래(wav) 저장
 #         song = os.path.join(f'../../content/audio_origin_sec/{g}', f'{filename}')
 #         j = j + 1
 #

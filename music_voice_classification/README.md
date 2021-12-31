@@ -3,7 +3,7 @@
 
 ### 설명
 >
-> - 장르에 따라 음원을 두 부류로 나눔 (fast or slow)
+> - 음악 속도에 따라 음원을 두 부류로 나눔 (fast or slow)
 > - Word2Vec을 이용해 만들어진 단어 사전을 이용해 아래와 같이 네 가지로 분류
 >    - fast: happy, angry
 >    - slow: neutral, sad
@@ -25,7 +25,7 @@
     
 
 ## Instructions
-### 음원을 기반으로 장르 분류 모델 학습
+### 음원 속도를 기반으로 fast, slow 분류 모델 학습
 Run the train_music_voice_classifier.py file
 ```
 python3 train_music_voice_classifier.py
